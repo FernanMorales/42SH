@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/11 21:38:24 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/03 19:28:25 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/04 18:35:26 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,20 @@ static void			handle_sigcont(t_env *e)
 {
 	signal(SIGTSTP, signal_handler);
 	init_term(e);
-	put_win(e);
+//	put_win(e);
 }
 
 static void			handle_sigwinch(t_env *e)
 {
 	ioctl(0, TIOCGWINSZ, &e->term_size);
-	put_win(e);
+//	put_win(e);
+	//	cut_print(l); ligne modifier
 }
 
 static void			handle_close(t_env *e)
 {
 	close_term(e);
-	exit (esc);
+	exit (ESC);
 }
 
 void				signal_handler(int sig)

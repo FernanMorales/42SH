@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:35:37 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/04 16:48:14 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/04 19:52:03 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,15 @@ void		check_handler(int sig)
 	signal(SIGINT, signal_handler);
 }
 */
+
+/* check entrer */
+void		press_key(char *buf)
+{
+	ft_putstr("press key");
+	if (ft_memcmp(buf, K_DEL_L, 8) == 0)
+		ft_putstr("\n{delete}\n");
+}
+
 int		main(int ac, char **av, char **envp)
 {
 	char	buf[8];
@@ -109,6 +118,9 @@ int		main(int ac, char **av, char **envp)
 	while ((ret = read(0, buf, 1)) != 0)
 	{
 		buf[ret] = '\0';
+		printf("[%o %o %o %o %o %o %o %o]\n",
+			   buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+		press_key(buf);
 		if (l->size_lst == 0)
 			insert_empty_lst(l, buf);
 		else

@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/01 16:20:57 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/03 19:33:30 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/04 19:48:33 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,31 @@
 
 # include <termios.h>
 # include <stdlib.h>
+# define k_AR_L 4479771
+# define K_AR_T 4283163
+# define k_AR_R 4414235
+# define K_AR_B 4348699
+# define K_HOME 4741915
+# define K_END 4610843
+# define K_TAB 9
+# define K_PREV 5263131
+# define K_NEXT 5328667
+# define K_CTRLD 4
+# define K_DEL_L "/177/0/0/0/0/0"
+# define K_DEL_R 
+# define K_RETURN 10
+# define K_ECHAP 27
 
 enum				e_error
 {
-	ERRRO_INIT,
+	ERROR_INIT,
 	ERROR_CLOSE,
 };
 
 enum				ee_exit
 {
 	EXIT,
+	ESC,
 };
 
 typedef struct		s_elem
