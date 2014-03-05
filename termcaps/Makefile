@@ -6,14 +6,14 @@
 #    By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/22 18:34:11 by pvarin            #+#    #+#              #
-#    Updated: 2014/03/03 19:27:43 by pvarin           ###   ########.fr        #
+#    Updated: 2014/03/05 15:10:42 by pvarin           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 CC		= gcc
 CFLAGS	= -g -Wall -Werror -Wextra
 NAME	= termcaps
-SRC		= $(addprefix srcs/,$(addsuffix .c, main ft_term ft_lst ft_signal))
+SRC		= $(addprefix srcs/,$(addsuffix .c, main ft_term list ft_signal))
 OBJ		= $(SRC:.c=.o)
 
 all : $(NAME)

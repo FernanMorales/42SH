@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:35:37 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/04 19:52:03 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/05 19:23:58 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,45 @@ void		check_handler(int sig)
 }
 */
 
-/* check entrer */
-void		press_key(char *buf)
+int			del_one(t_lst *l)
 {
-	ft_putstr("press key");
-	if (ft_memcmp(buf, K_DEL_L, 8) == 0)
-		ft_putstr("\n{delete}\n");
+	del_elem(l->cur, l->cur->last);
+	return (1);
+}
+
+int			move_right(t_lst *l)
+{
+	l->cur->cursor = l->cur->cursor->next;
+	return (1);
+}
+
+int			move_left(t_lst *l)
+{
+	l->cur->cursor = l->cur->cursor->prev;
+	return (1);
+}
+
+int			move_up(t_lst *l)
+{
+	l->cur->cursor = l->cur->cursor->prev;
+	return (1);
+}
+
+/* check entrer */
+int			press_key(t_lst *l, char *buf)
+{
+	int		res;
+
+	res = 0;
+	if (ft_memcmp(buf, K_DEL_L, 8) == 0 || ft_memcmp(buf, K_DEL_R , 8) == 0)
+		res = del_one(l);
+	if (ft_memcmp(buf, K_AR_R, 8) == 0)
+		res = move_right(l);
+	if (ft_memcmp(buf, K_AR_L, 8) == 0)
+		res = move_left(l);
+	if (ft_memcmp(buf, K_AR_U, 8) == 0)
+		res = move_up(l);
+	return (res);
 }
 
 int		main(int ac, char **av, char **envp)
@@ -117,15 +150,28 @@ int		main(int ac, char **av, char **envp)
 	printf("%s\n", av[0]);
 	while ((ret = read(0, buf, 1)) != 0)
 	{
-		buf[ret] = '\0';
+		//buf[ret] = '\0';
 		printf("[%o %o %o %o %o %o %o %o]\n",
 			   buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
-		press_key(buf);
-		if (l->size_lst == 0)
-			insert_empty_lst(l, buf);
-		else
-			insert_elem(l, buf);
-		cur_print(l);
+		if (press_key(l, buf) == 0)
+		{
+			printf("{%s}\n", buf);
+			if (l->cur->size_lst == 0)
+				insert_empty_lst(l->cur, buf);
+			else
+				insert_elem(l->cur, buf);
+		}
+		//l->cursor = l->last;
+		buf[0] = 0;
+		buf[1] = 0;
+		buf[2] = 0;
+		buf[3] = 0;
+		buf[4] = 0;
+		buf[5] = 0;
+		buf[6] = 0;
+		buf[7] = 0;
+
+		cur_print(l->cur);
 	}
 	ft_print(g_e.env_c);
 	close_term(&g_e);
