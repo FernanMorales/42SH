@@ -1,12 +1,12 @@
-[submodule "libckl"]
-	path = libckl
+[submodule "lexer/libckl"]
+	path = lexer/libckl
 	url = git@github.com:conradkleinespel/libckl.git
-[submodule "libcks"]
-	path = libcks
+[submodule "lexer/libcks"]
+	path = lexer/libcks
 	url = git@github.com:conradkleinespel/libcks.git
-[submodule "libckstd"]
-	path = libckstd
+[submodule "lexer/libckstd"]
+	path = lexer/libckstd
 	url = git@github.com:conradkleinespel/libckstd.git
-[submodule "libckbt"]
-	path = libckbt
+[submodule "lexer/libckbt"]
+	path = lexer/libckbt
 	url = git@github.com:conradkleinespel/libckbt.git

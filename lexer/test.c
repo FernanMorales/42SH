@@ -7,7 +7,7 @@ int		main(void)
 {
 	int		error;
 
-	error = sh_parse(cks_get_line(0), NULL);
+	error = sh_parse(cks_get_line(0), NULL, "/root/dir/");
 	printf("%d\n", error);
 	return (error);
 }

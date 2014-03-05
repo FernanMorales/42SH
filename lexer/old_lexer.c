@@ -26,14 +26,6 @@ int		lexer_callback_single_quote_string_content(t_am *am)
 	i = 0;
 	while (i < cks_len(am->source) && am->source[i] != '\'')
 	{
-		if (am->source[i] == '$' || am->source[i] == '\\'
-			|| am->source[i] == '"' || am->source[i] == '`')
-		{
-			orig = cks_append(orig, "\\\\\\");
-			computed = cks_append(computed, "\\");
-			am->source = cks_insert(am->source, i, "\\\\\\");
-			i += 3;
-		}
 		orig = cks_append_len(orig, am->source + i, 1);
 		computed = cks_append_len(computed, am->source + i, 1);
 		i++;
@@ -228,12 +220,10 @@ int		am_lex(t_am_maker maker, const char *source, t_ckl *tokens)
 void	sh_remove_useless_tokens(t_ckl *tokens)
 {
 	t_ckl_item	*item;
-	t_ckl_item	*next;
 
 	item = tokens->first;
 	while (item)
 	{
-		next = item->next;
 		t_am_token	*token = &ckl_data(t_am_token, item);
 		if (token->type == SH_TOKEN_TYPE_DOUBLE_QUOTE
 			|| token->type == SH_TOKEN_TYPE_SINGLE_QUOTE)
@@ -243,7 +233,7 @@ void	sh_remove_useless_tokens(t_ckl *tokens)
 			ckl_withdraw(tokens, item);
 			ckl_free_item(item);
 		}
-		item = next;
+		item = item->next;
 	}
 }
 
@@ -253,6 +243,173 @@ int		sh_type_is_op(int type)
 			|| type == SH_TOKEN_TYPE_LOGICAL_AND
 			|| type == SH_TOKEN_TYPE_LOGICAL_OR
 			|| type == SH_TOKEN_TYPE_PIPE);
+}
+
+void	sh_infile(t_ckl *tokens, t_ckl_item *start, const t_cks file)
+{
+	t_am_token		one;
+	t_am_token		two;
+	t_am_token		three;
+
+	one.type = SH_TOKEN_TYPE_STRING;
+	one.value_orig = cks_new("./42sh-infile");
+	one.value_computed = cks_new("./42sh-infile");
+	two.type = SH_TOKEN_TYPE_STRING;
+	two.value_orig = cks_dup(file);
+	two.value_computed = cks_dup(file);
+	three.type = SH_TOKEN_TYPE_PIPE;
+	three.value_orig = cks_new("|");
+	three.value_computed = cks_new("|");
+	ckl_prepend_item(tokens, start, &one);
+	ckl_prepend_item(tokens, start, &two);
+	ckl_prepend_item(tokens, start, &three);
+}
+
+void	sh_heredoc(t_ckl *tokens, t_ckl_item *start, const t_cks boundary)
+{
+	t_am_token		one;
+	t_am_token		two;
+	t_am_token		three;
+
+	one.type = SH_TOKEN_TYPE_STRING;
+	one.value_orig = cks_new("./42sh-heredoc");
+	one.value_computed = cks_new("./42sh-heredoc");
+	two.type = SH_TOKEN_TYPE_STRING;
+	two.value_orig = cks_dup(boundary);
+	two.value_computed = cks_dup(boundary);
+	three.type = SH_TOKEN_TYPE_PIPE;
+	three.value_orig = cks_new("|");
+	three.value_computed = cks_new("|");
+	ckl_prepend_item(tokens, start, &one);
+	ckl_prepend_item(tokens, start, &two);
+	ckl_prepend_item(tokens, start, &three);
+}
+
+void	sh_replace_redirections_in(t_ckl *t, t_ckl_item *start)
+{
+	t_ckl_item		*i;
+	t_am_token		*curr;
+	t_am_token		*next;
+
+	i = start;
+	while (i && i->next)
+	{
+		next = &ckl_data(t_am_token, i->next);
+		curr = &ckl_data(t_am_token, i);
+		if (curr->type == SH_TOKEN_TYPE_REDIR_IN
+			&& sh_token_is_string(next))
+		{
+			sh_infile(t, start, next->value_computed);
+			ckl_withdraw(t, i);
+			ckl_withdraw(t, i->next);
+			i = i->next->next;
+			continue ;
+		}
+		else if (curr->type == SH_TOKEN_TYPE_HERE_DOC
+			&& sh_token_is_string(next))
+		{
+			sh_heredoc(t, start, next->value_computed);
+			ckl_withdraw(t, i);
+			ckl_withdraw(t, i->next);
+			i = i->next->next;
+			continue ;
+		}
+		i = i->next;
+	}
+}
+
+void	sh_outfile(t_ckl *tokens, t_ckl_item *end, const t_cks file)
+{
+	t_am_token		one;
+	t_am_token		two;
+	t_am_token		three;
+
+	one.type = SH_TOKEN_TYPE_STRING;
+	one.value_orig = cks_new("./42sh-outfile");
+	one.value_computed = cks_new("./42sh-outfile");
+	two.type = SH_TOKEN_TYPE_STRING;
+	two.value_orig = cks_dup(file);
+	two.value_computed = cks_dup(file);
+	three.type = SH_TOKEN_TYPE_PIPE;
+	three.value_orig = cks_new("|");
+	three.value_computed = cks_new("|");
+	ckl_append_item(tokens, end, &three);
+	ckl_append_item(tokens, end->next, &one);
+	ckl_append_item(tokens, end->next->next, &two);
+}
+
+void	sh_outfile_append(t_ckl *tokens, t_ckl_item *end, const t_cks boundary)
+{
+	t_am_token		one;
+	t_am_token		two;
+	t_am_token		three;
+
+	one.type = SH_TOKEN_TYPE_STRING;
+	one.value_orig = cks_new("./42sh-outfile-append");
+	one.value_computed = cks_new("./42sh-outfile-append");
+	two.type = SH_TOKEN_TYPE_STRING;
+	two.value_orig = cks_dup(boundary);
+	two.value_computed = cks_dup(boundary);
+	three.type = SH_TOKEN_TYPE_PIPE;
+	three.value_orig = cks_new("|");
+	three.value_computed = cks_new("|");
+	ckl_append_item(tokens, end, &three);
+	ckl_append_item(tokens, end->next, &one);
+	ckl_append_item(tokens, end->next->next, &two);
+}
+
+void	sh_replace_redirections_out(t_ckl *t, t_ckl_item *start, t_ckl_item *end)
+{
+	t_ckl_item		*i;
+	t_am_token		*curr;
+	t_am_token		*next;
+
+	i = start;
+	while (i && i->next)
+	{
+		next = &ckl_data(t_am_token, i->next);
+		curr = &ckl_data(t_am_token, i);
+		if (curr->type == SH_TOKEN_TYPE_REDIR_OUT
+			&& sh_token_is_string(next))
+		{
+			sh_outfile(t, end, next->value_computed);
+			ckl_withdraw(t, i);
+			ckl_withdraw(t, i->next);
+			i = i->next->next;
+			continue ;
+		}
+		else if (curr->type == SH_TOKEN_TYPE_APPEND_REDIR_OUT
+			&& sh_token_is_string(next))
+		{
+			sh_outfile_append(t, end, next->value_computed);
+			ckl_withdraw(t, i);
+			ckl_withdraw(t, i->next);
+			i = i->next->next;
+			continue ;
+		}
+		i = i->next;
+	}
+}
+
+void	sh_replace_redirections(t_ckl *t)
+{
+	t_ckl_item		*i;
+	t_ckl_item		*start;
+
+	i = t->first;
+	while (i != NULL)
+	{
+		while (i && sh_type_is_op(ckl_data(t_am_token, i).type))
+			i = i->next;
+		if ((start = i))
+			sh_replace_redirections_in(t, start);
+		while (i && i->next && !sh_type_is_op(ckl_data(t_am_token, i->next).type))
+			i = i->next;
+		if (i)
+			sh_replace_redirections_out(t, start, i);
+		if (i)
+			i = i->next;
+	}
 }
 
 int		sh_token_is_quoted_string(t_am_token *t)
@@ -335,5 +492,6 @@ int		sh_lex(const char *src, t_ckl *tokens)
 	sh_remove_useless_tokens(tokens);
 	sh_concat_strings(tokens);
 	sh_remove_whitespace(tokens);
+	sh_replace_redirections(tokens);
 	return (0);
 }

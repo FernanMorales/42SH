@@ -49,7 +49,11 @@ typedef enum					e_sh_token_type
 
 extern char						*sh_types[19];
 
-int			sh_parse(const char *src, t_ckbt *tree);
+/*
+** Base is the basepath of the executable ./42sh.
+** It is used to deduce the paths of 42heredoc, 42out, 42in and 42outappend.
+*/
+int			sh_parse(const char *src, t_ckbt *tree, const char *base);
 int			sh_lex(const char *src, t_ckl *tokens);
 int			sh_check_bracketing(const char *src);
 

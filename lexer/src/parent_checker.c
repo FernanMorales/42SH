@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parent_checker.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/03/05 18:01:57 by ckleines          #+#    #+#             */
+/*   Updated: 2014/03/05 18:01:59 by ckleines         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <string.h>
 #include <stdio.h>
 #include "ckl.h"
-#include "sh_parent_check.h"
-#include "sh_parser.h"
+#include "am.h"
+#include "sh.h"
 
 static size_t	st_check_skipped(const char *src, t_ckl *stack)
 {
