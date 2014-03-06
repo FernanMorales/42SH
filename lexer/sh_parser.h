@@ -47,6 +47,21 @@ typedef enum					e_sh_token_type
 	SH_TOKEN_TYPE_QUOTE_STRING
 }								t_sh_token_type;
 
+typedef enum					e_sh_command_type
+{
+	SH_COMMAND_TYPE_PIPE,
+	SH_COMMAND_TYPE_AND,
+	SH_COMMAND_TYPE_OR,
+	SH_COMMAND_TYPE_SEMICOLON,
+	SH_COMMAND_TYPE_EXEC
+}								t_sh_command_type;
+
+typedef struct					s_sh_command
+{
+	t_sh_command_type			type;
+	t_ckl						*argv;
+}								t_sh_command;
+
 extern char						*sh_types[19];
 
 /*

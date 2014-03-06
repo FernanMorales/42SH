@@ -6,8 +6,10 @@
 int		main(void)
 {
 	int		error;
+	t_ckbt	*tree;
 
-	error = sh_parse(cks_get_line(0), NULL, "/root/dir/");
+	tree = ckbt_new(t_sh_command);
+	error = sh_parse(cks_get_line(0), tree, "/root/dir/");
 	printf("%d\n", error);
 	return (error);
 }

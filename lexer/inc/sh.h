@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/28 03:59:39 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/05 18:09:58 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/06 17:25:40 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,21 @@ int		sh_token_is_string(t_am_token *t);
 void	sh_concat_strings(t_ckl *t);
 void	sh_remove_whitespace(t_ckl *tokens);
 int		sh_lex(const char *src, t_ckl *tokens);
+void	sh_replace_redirections(t_ckl *t, const char *base);
+void	sh_print_tokens(t_ckl *tokens);
+int		sh_build_tree(t_ckl *tokens, t_ckbt *tree);
+void	sh_infile(t_ckl *tokens, t_ckl_item *start, const t_cks file,
+			const char *base);
+void	sh_heredoc(t_ckl *tokens, t_ckl_item *start, const t_cks boundary,
+			const char *base);
+void	sh_replace_redirections_in(t_ckl *t, t_ckl_item *start,
+			const char *base);
+void	sh_outfile(t_ckl *tokens, t_ckl_item *end, const t_cks file,
+			const char *base);
+void	sh_outfile_append(t_ckl *tokens, t_ckl_item *end,
+			const t_cks boundary, const char *base);
+void	sh_replace_redirections_out(t_ckl *t, t_ckl_item *start,
+			t_ckl_item *end, const char *base);
+int		sh_parse(const char *src, t_ckbt *tree, const char *basepath);
 
 #endif
