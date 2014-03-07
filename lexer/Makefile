@@ -6,7 +6,7 @@
 #    By: ckleines <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/25 14:16:46 by ckleines          #+#    #+#              #
-#    Updated: 2014/03/06 17:32:29 by ckleines         ###   ########.fr        #
+#    Updated: 2014/03/07 02:29:18 by ckleines         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,5 +82,5 @@ fclean: clean
 
 re: fclean all
 
-test: $(NAME)
+test: $(NAME) test.c
 	$(CC) -o test test.c $(OBJ) $(INC) $(LIB)
