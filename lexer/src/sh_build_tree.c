@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/06 17:31:27 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/07 02:34:46 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/07 03:09:56 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,37 @@ t_ckbt_node	*sh_new_node_logic(t_ckbt *tree, t_sh_token_type type)
 	return (ckbt_new_node(tree, &cmd));
 }
 
+t_ckbt_node	*sh_new_node_string(t_ckbt *tree)
+{
+	t_sh_command	cmd;
+
+	cmd.type = SH_COMMAND_TYPE_EXEC;
+	cmd.argv = ckl_new(t_am_token);
+	return (ckbt_new_node(tree, &cmd));
+}
+
 int			sh_parse_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 {
-	printf("parse cmd\n");
-	tree = NULL;
+	t_am_token		*tok;
+	t_sh_command	*cmd;
+
 	*root = NULL;
-	while (tokens->first != NULL && ckl_data(t_am_token, tokens->first).type == SH_TOKEN_TYPE_STRING)
+	if (tokens->first == NULL)
+		return (1);
+	tok = &ckl_data(t_am_token, tokens->first);
+	if (tok->type != SH_TOKEN_TYPE_STRING && tok->type != SH_TOKEN_TYPE_QUOTE_STRING)
+		return (1);
+	*root = sh_new_node_string(tree);
+	cmd = &ckbt_data(t_sh_command, *root);
+	while (tokens->first != NULL)
+	{
+		tok = &ckl_data(t_am_token, tokens->first);
+		if (tok->type != SH_TOKEN_TYPE_STRING && tok->type != SH_TOKEN_TYPE_QUOTE_STRING)
+			return (1);
+		ckl_append(cmd->argv, tok);
 		ckl_withdraw(tokens, tokens->first);
-	return (tokens->first != NULL);
+	}
+	return (0);
 }
 
 int			sh_parse_pipe_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
@@ -73,7 +96,6 @@ int			sh_parse_pipe_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	t_am_token		*tok;
 	t_ckbt_node		*node;
 
-	printf("parse pipe cmd line\n");
 	if (tokens->first == NULL)
 		return (1);
 	node = NULL;
@@ -98,7 +120,6 @@ int			sh_parse_log_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	t_am_token		*tok;
 	t_ckbt_node		*node;
 
-	printf("parse log cmd line\n");
 	if (tokens->first == NULL)
 		return (1);
 	node = NULL;
@@ -124,7 +145,6 @@ int			sh_parse_seq_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	t_am_token		*tok;
 	t_ckbt_node		*node;
 
-	printf("parse seq cmd line\n");
 	if (tokens->first == NULL)
 		return (1);
 	node = NULL;
@@ -146,7 +166,6 @@ int			sh_parse_seq_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 
 int			sh_parse_cmd_line(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 {
-	printf("parse cmd line\n");
 	if (tokens->first == NULL)
 		return (0);
 	return (sh_parse_seq_cmd(tokens, tree, root));
