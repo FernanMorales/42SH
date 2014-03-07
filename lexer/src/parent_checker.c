@@ -15,6 +15,7 @@
 #include "ckl.h"
 #include "am.h"
 #include "sh.h"
+#include "ckstd.h"
 
 static size_t	st_check_skipped(const char *src, t_ckl *stack)
 {
@@ -27,18 +28,18 @@ static size_t	st_check_skipped(const char *src, t_ckl *stack)
 
 static size_t	st_do_one(const char *src, t_ckl *stack, t_sh_parent_check_corr corr)
 {
-	if (strlen(src) >= strlen(corr.end) && strncmp(src, corr.end, strlen(corr.end)) == 0)
+	if (ckstd_strlen(src) >= ckstd_strlen(corr.end) && strncmp(src, corr.end, ckstd_strlen(corr.end)) == 0)
 	{
 		if (stack->last && ckl_data(int, stack->last) == corr.type)
 		{
 			ckl_withdraw(stack, stack->last);
-			return (strlen(corr.end));
+			return (ckstd_strlen(corr.end));
 		}
 	}
-	if (strlen(src) >= strlen(corr.start) && strncmp(src, corr.start, strlen(corr.start)) == 0)
+	if (ckstd_strlen(src) >= ckstd_strlen(corr.start) && strncmp(src, corr.start, ckstd_strlen(corr.start)) == 0)
 	{
 		ckl_append(stack, &corr.type);
-		return (strlen(corr.start));
+		return (ckstd_strlen(corr.start));
 	}
 	return (0);
 }
@@ -50,7 +51,7 @@ int		sh_check_bracketing(const char *src)
 	int			c;
 
 	stack = ckl_new(int);
-	len = strlen(src);
+	len = ckstd_strlen(src);
 	i = 0;
 	while (i < len)
 	{

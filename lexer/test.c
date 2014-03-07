@@ -30,7 +30,7 @@ void	debug_tree(t_ckbt *tree, t_ckbt_node *node)
 {
 	t_sh_command		*command;
 
-	tree = NULL;
+	(void)tree;
 	command = &ckbt_data(t_sh_command, node);
 	write(2, types[command->type], ckstd_strlen(types[command->type]));
 }
@@ -44,5 +44,6 @@ int		main(void)
 	error = sh_parse(cks_get_line(0), tree, "/root/dir/");
 	ckbt_debug(tree, debug_tree);
 	printf("%d\n", error);
+	(void)tree;
 	return (error);
 }
