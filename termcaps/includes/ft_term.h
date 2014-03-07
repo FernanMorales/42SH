@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/01 16:20:57 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/07 19:17:43 by dtortera         ###   ########.fr       */
+/*   Updated: 2014/03/07 19:31:50 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 # include <termios.h>
 # include <stdlib.h>
-# define K_AR_L "\33\133\104\0\0\0\0\0"
-# define K_AR_U "\33\133\101\0\0\0\0\0"
-# define K_AR_R "\33\133\103\0\0\0\0\0"
-# define K_AR_D "\33\133\102\0\0\0\0\0"
+# define K_AR_L "\033\133\104\0\0\0\0\0"
+# define K_AR_U "\033\133\101\0\0\0\0\0"
+# define K_AR_R "\033\133\103\0\0\0\0\0"
+# define K_AR_D "\033\133\102\0\0\0\0\0"
 # define K_HOME 4741915
 # define K_CTRL_A
 # define K_END 4610843
@@ -29,7 +29,7 @@
 # define K_CTRL_D "\4\0\0\0\0\0\0\0"
 # define K_CTRL_L "\14\0\0\0\0\0\0\0"
 # define K_DEL_L "\177\0\0\0\0\0\0\0"
-# define K_DEL_R "\176\0\0\0\0\0\0\0"
+# define K_DEL_R "\033\133\063\176\0\0\0\0"
 # define K_RETURN 10
 # define K_ECHAP 27
 
@@ -116,7 +116,7 @@ void	move_right(t_lst *l);
 void	move_up(t_lst *l);
 void	del_one(t_lst *l);
 
-typedef int		(*t_funcptr_mov)(t_lst *l);
+typedef void	(*t_funcptr_mov)(t_lst *l);
 typedef struct	s_mov_functions
 {
 	char			*key;

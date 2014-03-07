@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:35:37 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/07 19:16:04 by dtortera         ###   ########.fr       */
+/*   Updated: 2014/03/07 19:29:05 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void		insert_char_to_list(t_lst *l, char *buf)
 
 int		main(int ac, char **av, char **envp)
 {
-	char	buf[128];
+	char	buf[8];
 	int		ret;
 	extern t_env	g_e;
 	t_lst	*l;

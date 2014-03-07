@@ -6,7 +6,7 @@
 #    By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/22 18:34:11 by pvarin            #+#    #+#              #
-#    Updated: 2014/03/07 17:50:14 by dtortera         ###   ########.fr        #
+#    Updated: 2014/03/07 19:30:15 by pvarin           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -32,7 +32,7 @@ $(NAME): $(OBJ) $(LIBFT)
 
 .PHONY: clean fclean re all
 clean:
-	$(MAKE) clean libft/ clean
+	$(MAKE) clean -C libft/
 	$(RM) $(OBJ)
 fclean: clean
 	$(MAKE) fclean -C libft/
