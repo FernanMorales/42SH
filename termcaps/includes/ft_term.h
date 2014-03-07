@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/01 16:20:57 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/05 18:57:37 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/07 15:18:47 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 # include <termios.h>
 # include <stdlib.h>
-# define K_AR_L "\104\0\0\0\0\0\0\0"
-# define K_AR_U "\101\0\0\0\0\0\0\0"
-# define K_AR_R "\103\0\0\0\0\0\0\0"
-# define K_AR_D "\102\0\0\0\0\0\0\0"
+# define K_AR_L "\33\133\104\0\0\0\0\0"
+# define K_AR_U "\33\133\101\0\0\0\0\0"
+# define K_AR_R "\33\133\103\0\0\0\0\0"
+# define K_AR_D "\33\133\102\0\0\0\0\0"
 # define K_HOME 4741915
 # define K_CTRL_A
 # define K_END 4610843
@@ -28,7 +28,7 @@
 # define K_NEXT 5328667
 # define K_CTRLD "\4\0\0\0\0\0\0\0"
 # define K_DEL_L "\177\0\0\0\0\0\0\0"
-# define K_DEL_R "\0\0\0\0\0\0\0\0"
+# define K_DEL_R "\176\0\0\0\0\0\0\0"
 # define K_RETURN 10
 # define K_ECHAP 27
 

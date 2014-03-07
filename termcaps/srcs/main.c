@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:35:37 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/05 19:23:58 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/07 15:58:43 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,14 @@ int			move_right(t_lst *l)
 int			move_left(t_lst *l)
 {
 	l->cur->cursor = l->cur->cursor->prev;
+	tputs(tgetstr("le", NULL), 1, tputs_putchar);
 	return (1);
 }
 
 int			move_up(t_lst *l)
 {
 	l->cur->cursor = l->cur->cursor->prev;
+	tputs(tgetstr("nd", NULL), 1, tputs_putchar);
 	return (1);
 }
 
@@ -133,9 +135,24 @@ int			press_key(t_lst *l, char *buf)
 	return (res);
 }
 
+void		insert_char_to_list(t_lst *l, char *buf)
+{
+	if (l->cur->size_lst == 0)
+	{
+		insert_empty_lst(l->cur, buf);
+		l->cur->cursor = l->cur->first;
+	}
+	else
+	{
+		insert_elem(l->cur, buf);
+		//	l->cur->cursor = l->cur->cursor->next;
+	}
+	printf("{%s}\n", l->cur->cursor->data);
+}
+
 int		main(int ac, char **av, char **envp)
 {
-	char	buf[8];
+	char	buf[128];
 	int		ret;
 	extern t_env	g_e;
 	t_lst	*l;
@@ -148,19 +165,16 @@ int		main(int ac, char **av, char **envp)
 	if (ac != 1)
 		return (1);
 	printf("%s\n", av[0]);
-	while ((ret = read(0, buf, 1)) != 0)
+	while ((ret = read(0, buf, 8)) != 0)
 	{
 		//buf[ret] = '\0';
 		printf("[%o %o %o %o %o %o %o %o]\n",
 			   buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
 		if (press_key(l, buf) == 0)
 		{
-			printf("{%s}\n", buf);
-			if (l->cur->size_lst == 0)
-				insert_empty_lst(l->cur, buf);
-			else
-				insert_elem(l->cur, buf);
+			insert_char_to_list(l, buf);
 		}
+		ft_putstr("avant clear\n");
 		//l->cursor = l->last;
 		buf[0] = 0;
 		buf[1] = 0;
