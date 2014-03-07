@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/06 17:31:27 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/07 03:19:48 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/07 04:27:05 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,16 @@ int			sh_parse_pipe_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	if (sh_parse_cmd(tokens, tree, &node) == 1)
 	{
 		if (tokens->first == NULL)
+		{
+			*root = node;
 			return (0);
+		}
 		tok = &ckl_data(t_am_token, tokens->first);
 		if (tok->type != SH_TOKEN_TYPE_PIPE)
+		{
+			*root = node;
 			return (1);
+		}
 		*root = sh_new_node_pipe(tree);
 		(*root)->left = node;
 		ckl_withdraw(tokens, tokens->first);
@@ -126,11 +132,17 @@ int			sh_parse_log_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	if (sh_parse_pipe_cmd(tokens, tree, &node) == 1)
 	{
 		if (tokens->first == NULL)
+		{
+			*root = node;
 			return (0);
+		}
 		tok = &ckl_data(t_am_token, tokens->first);
 		if (tok->type != SH_TOKEN_TYPE_LOGICAL_AND
 			&& tok->type != SH_TOKEN_TYPE_LOGICAL_OR)
+		{
+			*root = node;
 			return (1);
+		}
 		*root = sh_new_node_logic(tree, tok->type);
 		(*root)->left = node;
 		ckl_withdraw(tokens, tokens->first);
@@ -151,10 +163,16 @@ int			sh_parse_seq_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	if (sh_parse_log_cmd(tokens, tree, &node) == 1)
 	{
 		if (tokens->first == NULL)
+		{
+			*root = node;
 			return (0);
+		}
 		tok = &ckl_data(t_am_token, tokens->first);
 		if (tok->type != SH_TOKEN_TYPE_SEMICOLON)
+		{
+			*root = node;
 			return (1);
+		}
 		*root = sh_new_node_semicolon(tree);
 		(*root)->left = node;
 		ckl_withdraw(tokens, tokens->first);
