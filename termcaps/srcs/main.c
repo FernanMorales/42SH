@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:35:37 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/07 15:58:43 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/07 19:16:04 by dtortera         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,53 +20,6 @@
 #include "libft.h"
 
 t_env		g_e;
-
-int			tputs_putchar(int c)
-{
-	extern t_env	g_e;
-
-	write(g_e.fd_tty, &c, 1);
-	return (1);
-}
-
-void		ft_print(char **line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] != '\0')
-	{
-		ft_putstr(line[i]);
-		ft_putchar('\n');
-		i++;
-	}
-}
-
-void		rest_cursor(int len)
-{
-	while (len > 0)
-	{
-		tputs(tgetstr("le", NULL), 1, tputs_putchar);
-		len--;
-	}
-	tputs(tgetstr("cd", NULL), 1, tputs_putchar);
-}
-
-void		cur_print(t_lst *l)//, t_env *e)
-{
-	extern t_env	g_e;
-	t_elem	*tmp;
-	int		i;
-
-	i = -1;
-	tmp = l->first;
-	rest_cursor(l->size_lst);
-	while (++i < l->size_lst)
-	{
-		ft_putstr_fd(tmp->data, g_e.fd_tty);
-		tmp = tmp->next;
-	}
-}
 
 void		init_env(t_env *e, char **envp)
 {
@@ -92,47 +45,24 @@ void		check_handler(int sig)
 }
 */
 
-int			del_one(t_lst *l)
-{
-	del_elem(l->cur, l->cur->last);
-	return (1);
-}
-
-int			move_right(t_lst *l)
-{
-	l->cur->cursor = l->cur->cursor->next;
-	return (1);
-}
-
-int			move_left(t_lst *l)
-{
-	l->cur->cursor = l->cur->cursor->prev;
-	tputs(tgetstr("le", NULL), 1, tputs_putchar);
-	return (1);
-}
-
-int			move_up(t_lst *l)
-{
-	l->cur->cursor = l->cur->cursor->prev;
-	tputs(tgetstr("nd", NULL), 1, tputs_putchar);
-	return (1);
-}
-
 /* check entrer */
 int			press_key(t_lst *l, char *buf)
 {
-	int		res;
+	char							*cur_key;
+	extern const t_mov_functions	g_mov_functions[];
+	size_t							i;
 
-	res = 0;
-	if (ft_memcmp(buf, K_DEL_L, 8) == 0 || ft_memcmp(buf, K_DEL_R , 8) == 0)
-		res = del_one(l);
-	if (ft_memcmp(buf, K_AR_R, 8) == 0)
-		res = move_right(l);
-	if (ft_memcmp(buf, K_AR_L, 8) == 0)
-		res = move_left(l);
-	if (ft_memcmp(buf, K_AR_U, 8) == 0)
-		res = move_up(l);
-	return (res);
+	i = 0;
+	while ((cur_key = g_mov_functions[i].key) != NULL)
+	{
+		if (ft_memcmp(buf, cur_key, 8) == 0)
+		{
+			g_mov_functions[i].funct(l);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
 }
 
 void		insert_char_to_list(t_lst *l, char *buf)

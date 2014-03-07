@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/01 16:20:57 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/07 15:18:47 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/07 19:17:43 by dtortera         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 # define K_TAB 9
 # define K_PREV 5263131
 # define K_NEXT 5328667
-# define K_CTRLD "\4\0\0\0\0\0\0\0"
+# define K_CTRL_D "\4\0\0\0\0\0\0\0"
+# define K_CTRL_L "\14\0\0\0\0\0\0\0"
 # define K_DEL_L "\177\0\0\0\0\0\0\0"
 # define K_DEL_R "\176\0\0\0\0\0\0\0"
 # define K_RETURN 10
@@ -43,6 +44,7 @@ enum				e_exit
 	EXIT,
 	ESC
 };
+
 
 typedef struct		s_elem
 {
@@ -62,6 +64,7 @@ typedef struct		s_lst
 	struct s_lst	*cur;
 //	size_t			max_size;
 }					t_lst;
+
 
 typedef struct		s_env
 {
@@ -95,6 +98,31 @@ void		del_elem(t_lst *l, t_elem *current);
 /*
 ** ft_signal
 */
-void				signal_handler(int sig);
+void		signal_handler(int sig);
+
+/*
+** print
+*/
+int			tputs_putchar(int c);
+void		ft_print(char **line);
+void		rest_cursor(int len);
+void		cur_print(t_lst *l);
+
+/*
+** mov_functions & mov_funct_?
+*/
+void	move_left(t_lst *l);
+void	move_right(t_lst *l);
+void	move_up(t_lst *l);
+void	del_one(t_lst *l);
+
+typedef int		(*t_funcptr_mov)(t_lst *l);
+typedef struct	s_mov_functions
+{
+	char			*key;
+	t_funcptr_mov	funct;
+}				t_mov_functions;
+
+extern const t_mov_functions	g_mov_functions[];
 
 #endif /* !FT_TERM_H */

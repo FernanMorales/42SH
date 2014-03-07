@@ -6,31 +6,35 @@
 #    By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/22 18:34:11 by pvarin            #+#    #+#              #
-#    Updated: 2014/03/05 15:10:42 by pvarin           ###   ########.fr        #
+#    Updated: 2014/03/07 17:50:14 by dtortera         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
-CC		= gcc
-CFLAGS	= -g -Wall -Werror -Wextra
-NAME	= termcaps
-SRC		= $(addprefix srcs/,$(addsuffix .c, main ft_term list ft_signal))
-OBJ		= $(SRC:.c=.o)
+NAME = termcaps
 
-all : $(NAME)
+CFLAGS = -Werror -g
+ALL_CFLAGS = -Wall -Wextra $(CFLAGS)
 
-$(NAME) : $(OBJ) $(LIBFT)
-	make -C libft/
-	$(CC) $(CFLAGS) -o $@ $^ -L libft -lft -ltermcap
+FILES = main ft_term list print ft_signal
+FILES += mov_functions mov_funct_1
 
-%.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@ -I libft/includes -I ./includes
+SRC = $(addprefix srcs/, $(addsuffix .c, $(FILES)))
+OBJ = $(patsubst %.c, %.o, $(SRC))
 
-.PHONY : clean fclean re
+all: $(NAME)
 
-clean :
-	make -C libft/ clean
-	/bin/rm -rf $(OBJ)
-fclean : clean
-	make -C libft/ fclean
-	/bin/rm -rf $(NAME)
-re : fclean all
+$(NAME): $(OBJ) $(LIBFT)
+	$(MAKE) -C libft/
+	$(CC) $(ALL_CFLAGS) -o $@ $^ -L libft -lft -ltermcap
+
+%.o: %.c includes/ft_term.h
+	$(CC) $(ALL_CFLAGS) -c $< -o $@ -I libft/includes -I ./includes
+
+.PHONY: clean fclean re all
+clean:
+	$(MAKE) clean libft/ clean
+	$(RM) $(OBJ)
+fclean: clean
+	$(MAKE) fclean -C libft/
+	$(RM) $(NAME)
+re: fclean all
