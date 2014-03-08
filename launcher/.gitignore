@@ -1,7 +1,0 @@
-/a.out
-.DS_Store
-/42sh
-/42sh.dSYM
-*.o
-*.a
-test
