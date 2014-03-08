@@ -1,4 +1,2 @@
 - make whitespace finder iterative, not recursive
 - allow heredoc with quoted string (no variables)
-- !!!!! MAKE outfile/infile/heredoc executable paths ALWAYS RIGHT, depending
-on the current executable path
