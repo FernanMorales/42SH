@@ -10,3 +10,6 @@
 [submodule "lexer/libcks"]
 	path = lexer/libcks
 	url = git@github.com:conradkleinespel/libcks.git
+[submodule "launcher/libckf"]
+	path = launcher/libckf
+	url = git@github.com:conradkleinespel/libckf.git
