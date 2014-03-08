@@ -6,7 +6,7 @@
 #    By: ckleines <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/25 14:16:46 by ckleines          #+#    #+#              #
-#    Updated: 2014/03/07 02:29:18 by ckleines         ###   ########.fr        #
+#    Updated: 2014/03/08 10:02:08 by ckleines         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,14 +54,16 @@ INCLUDES = inc/am.h inc/sh.h
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(INCLUDES)
+libs:
 	make -C libckstd
 	make -C libcks
 	make -C libckl
 	make -C libckbt
+
+$(NAME): $(OBJ) $(INCLUDES) libs
 	ar -rc $(NAME) $(OBJ)
 
-src/%.o: src/%.c $(INCLUDES)
+src/%.o: src/%.c $(INCLUDES) libs
 	$(CC) -c -o $@ $<
 
 clean:
