@@ -121,35 +121,64 @@ int			sh_parse_pipe_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	return (0);
 }
 
-int			sh_parse_log_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
+unsigned	sh_parse_num_log_ops(t_ckl *tokens)
 {
+	t_ckl_item		*item;
 	t_am_token		*tok;
-	t_ckbt_node		*node;
+	unsigned		num;
+
+	num = 0;
+	item = tokens->first;
+	while (item)
+	{
+		tok = &ckl_data(t_am_token, item);
+		if (tok->type == SH_TOKEN_TYPE_SEMICOLON)
+			return (num);
+		if (tok->type == SH_TOKEN_TYPE_LOGICAL_AND
+			|| tok->type == SH_TOKEN_TYPE_LOGICAL_OR)
+			num++;
+		item = item->next;
+	}
+	return (num);
+}
+
+int			sh_parse_actual_log_cmd(t_ckl *tokens, t_ckbt *tree,
+				t_ckbt_node **root, unsigned num_ops)
+{
+	t_sh_command		cmd;
+	t_sh_command		*cmdp;
+	t_ckbt_node			*node;
+	t_am_token			*tok;
 
 	if (tokens->first == NULL)
 		return (1);
-	node = NULL;
-	if (sh_parse_pipe_cmd(tokens, tree, &node) == 1)
+	if (num_ops == 0)
+		return (sh_parse_pipe_cmd(tokens, tree, root));
+	cmd.type = -1; // unknown atm
+	cmd.argv = NULL; // we know it's an op !
+	*root = node = ckbt_new_node(tree, &cmd);
+	cmdp = &ckbt_data(t_sh_command, node);
+	if (sh_parse_actual_log_cmd(tokens, tree, &node->left, num_ops - 1) == 1)
 	{
 		if (tokens->first == NULL)
-		{
-			*root = node;
-			return (0);
-		}
-		tok = &ckl_data(t_am_token, tokens->first);
-		if (tok->type != SH_TOKEN_TYPE_LOGICAL_AND
-			&& tok->type != SH_TOKEN_TYPE_LOGICAL_OR)
-		{
-			*root = node;
 			return (1);
-		}
-		*root = sh_new_node_logic(tree, tok->type);
-		(*root)->left = node;
+		tok = &ckl_data(t_am_token, tokens->first);
+		if (tok->type == SH_TOKEN_TYPE_LOGICAL_AND)
+			cmdp->type = SH_COMMAND_TYPE_AND;
+		else if (tok->type == SH_TOKEN_TYPE_LOGICAL_OR)
+			cmdp->type = SH_COMMAND_TYPE_OR;
 		ckl_withdraw(tokens, tokens->first);
-		return (sh_parse_log_cmd(tokens, tree, &(*root)->right));
+		return (sh_parse_pipe_cmd(tokens, tree, &node->right));
 	}
-	*root = node;
 	return (0);
+}
+
+int			sh_parse_log_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
+{
+	if (tokens->first == NULL)
+		return (1);
+	return (sh_parse_actual_log_cmd(tokens, tree, root,
+		sh_parse_num_log_ops(tokens)));
 }
 
 int			sh_parse_seq_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
