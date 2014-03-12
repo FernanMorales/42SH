@@ -19,10 +19,12 @@ void	dont_move(t_lst *l)
 
 const t_mov_functions	g_mov_functions[] =
 {
-	{	K_AR_L,		move_left	},
-	{	K_AR_R,		move_right	},
-	{	K_AR_U,		move_up		},
-	{	K_DEL_L,	del_one		},
-	{	K_DEL_R,	del_one		},
-	{	NULL,		dont_move	}
+	{K_AR_L,		move_left},
+	{K_AR_R,		move_right},
+	{K_AR_U,		move_up},
+	{K_AR_D,		move_down},
+	{K_DEL_L,		del_one},
+	{K_DEL_R,		del_one},
+	{K_RETURN,		save_in_string},
+	{NULL,		dont_move}
 };

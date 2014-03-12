@@ -22,7 +22,6 @@ void		init_term(t_env *e)
 {
 	char	*path;
 
-
 //	ioctl(0, TIOCGWINSZ, &e->term_size);
 	if ((path = ttyname(isatty(STDOUT_FILENO))) == NULL)
 		exit (ERROR_INIT);
@@ -34,7 +33,8 @@ void		init_term(t_env *e)
 		exit (ERROR_INIT);
 	if (tcgetattr(0, &e->term) == -1)
 		exit (ERROR_INIT);
-//	tputs(tgetstr("vi", NULL), 1, tputs_putchar);
+//tputs(tgetstr("vi", NULL), 1, tputs_putchar);
+	// tputs(tgetstr("ti", NULL), 1, tputs_putchar);
 	ioctl(0, TIOCGWINSZ, &e->term_size);
 	e->term.c_lflag &= ~(ICANON | ECHO);
 	e->term.c_lflag |= ISIG;
@@ -44,25 +44,10 @@ void		init_term(t_env *e)
 
 void		close_term(t_env *e)
 {
-//	tputs(tgetstr("te", NULL), 1, tputs_putchar);
-//	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
+	// tputs(tgetstr("te", NULL), 1, tputs_putchar);
+	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
 	e->term.c_lflag |= ICANON | ECHO;
 	if (close(e->fd_tty) == -1)
 		exit (ERROR_CLOSE);
 	tcsetattr(0, 0, &e->term);
 }
-/*
-void		creat_lst(t_lst *l, char **av)
-{
-	int		i;
-
-	i = 0;
-	while (av[++i])
-	{
-		if (l->size_lst == 0)
-			insert_empty_lst(l, av[i]);
-		else
-			insert_elem(l, av[i]);
-	}
-}
-*/

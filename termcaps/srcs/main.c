@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:35:37 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/07 19:29:05 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/11 14:44:04 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,6 @@ void		init_env(t_env *e, char **envp)
 	e->env_c[j] = NULL; //ft_strnew(0);
 }
 
-/* pour check les signal */
-/*
-void		check_handler(int sig)
-{
-	signal(SIGINT, signal_handler);
-}
-*/
-
-/* check entrer */
 int			press_key(t_lst *l, char *buf)
 {
 	char							*cur_key;
@@ -70,14 +61,15 @@ void		insert_char_to_list(t_lst *l, char *buf)
 	if (l->cur->size_lst == 0)
 	{
 		insert_empty_lst(l->cur, buf);
+		insert_cur_position(l, l->cur->first, " ");
 		l->cur->cursor = l->cur->first;
 	}
 	else
 	{
-		insert_elem(l->cur, buf);
-		//	l->cur->cursor = l->cur->cursor->next;
+		insert_cur_position(l, l->cur->cursor, buf);
 	}
-	printf("{%s}\n", l->cur->cursor->data);
+	if (l != NULL && l->cur->size_lst != 0)
+		cur_print(l->cur);
 }
 
 int		main(int ac, char **av, char **envp)
@@ -87,7 +79,6 @@ int		main(int ac, char **av, char **envp)
 	extern t_env	g_e;
 	t_lst	*l;
 
-//	e = (t_env *)malloc(sizeof(t_env));
 	l = (t_lst *)malloc(sizeof(t_lst));
 	init_list(l);
 	init_env(&g_e, envp);
@@ -95,17 +86,11 @@ int		main(int ac, char **av, char **envp)
 	if (ac != 1)
 		return (1);
 	printf("%s\n", av[0]);
+	print_prompt();
 	while ((ret = read(0, buf, 8)) != 0)
 	{
-		//buf[ret] = '\0';
-		printf("[%o %o %o %o %o %o %o %o]\n",
-			   buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
 		if (press_key(l, buf) == 0)
-		{
 			insert_char_to_list(l, buf);
-		}
-		ft_putstr("avant clear\n");
-		//l->cursor = l->last;
 		buf[0] = 0;
 		buf[1] = 0;
 		buf[2] = 0;
@@ -114,8 +99,6 @@ int		main(int ac, char **av, char **envp)
 		buf[5] = 0;
 		buf[6] = 0;
 		buf[7] = 0;
-
-		cur_print(l->cur);
 	}
 	ft_print(g_e.env_c);
 	close_term(&g_e);

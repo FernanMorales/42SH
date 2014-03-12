@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/01 16:20:57 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/07 19:31:50 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/11 14:44:06 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@
 # define K_CTRL_L "\14\0\0\0\0\0\0\0"
 # define K_DEL_L "\177\0\0\0\0\0\0\0"
 # define K_DEL_R "\033\133\063\176\0\0\0\0"
-# define K_RETURN 10
+# define K_RETURN "\033\133\012\0\0\0\0\0"
 # define K_ECHAP 27
+# define PROMPT "42sh > "
 
 enum				e_error
 {
@@ -45,14 +46,13 @@ enum				e_exit
 	ESC
 };
 
-
 typedef struct		s_elem
 {
-	char			*data;
+	char				*data;
 	int				selected;
-	size_t			size_data;
-	struct s_elem	*next;
-	struct s_elem	*prev;
+	int				size_data;
+	struct s_elem		*next;
+	struct s_elem		*prev;
 }					t_elem;
 
 typedef struct		s_lst
@@ -61,8 +61,9 @@ typedef struct		s_lst
 	t_elem			*last;
 	t_elem			*cursor;
 	int				size_lst;
+	char			*str_return;
 	struct s_lst	*cur;
-//	size_t			max_size;
+	// size_t			max_size;
 }					t_lst;
 
 
@@ -94,7 +95,7 @@ int			insert_elem(t_lst *l, char *data);
 int			del_last_elem(t_lst *l);
 void		creat_lst(t_lst *l, char **av);
 void		del_elem(t_lst *l, t_elem *current);
-
+int			insert_cur_position(t_lst *l, t_elem *cur, const char *data);
 /*
 ** ft_signal
 */
@@ -105,8 +106,9 @@ void		signal_handler(int sig);
 */
 int			tputs_putchar(int c);
 void		ft_print(char **line);
-void		rest_cursor(int len);
+void		reset_cursor(int len);
 void		cur_print(t_lst *l);
+void		print_prompt(void);
 
 /*
 ** mov_functions & mov_funct_?
@@ -114,6 +116,8 @@ void		cur_print(t_lst *l);
 void	move_left(t_lst *l);
 void	move_right(t_lst *l);
 void	move_up(t_lst *l);
+void	move_down(t_lst *l);
+void	save_in_string(t_lst *l);
 void	del_one(t_lst *l);
 
 typedef void	(*t_funcptr_mov)(t_lst *l);

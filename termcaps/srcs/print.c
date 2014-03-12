@@ -23,27 +23,15 @@ int			tputs_putchar(int c)
 	return (1);
 }
 
-void		ft_print(char **line)
+void		reset_cursor(int len)
 {
-	int	i;
 
-	i = 0;
-	while (line[i] != '\0')
-	{
-		ft_putstr(line[i]);
-		ft_putchar('\n');
-		i++;
-	}
-}
-
-void		rest_cursor(int len)
-{
 	while (len > 0)
 	{
 		tputs(tgetstr("le", NULL), 1, tputs_putchar);
 		len--;
 	}
-	tputs(tgetstr("cd", NULL), 1, tputs_putchar);
+
 }
 
 void		cur_print(t_lst *l)//, t_env *e)
@@ -54,10 +42,42 @@ void		cur_print(t_lst *l)//, t_env *e)
 
 	i = -1;
 	tmp = l->first;
-	rest_cursor(l->size_lst);
+	tputs(tgetstr("cd", NULL), 1, tputs_putchar);
 	while (++i < l->size_lst)
 	{
-		ft_putstr_fd(tmp->data, g_e.fd_tty);
+
+		if (tmp == l->cursor->next)
+		{
+			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			ft_putstr_fd(tmp->data, g_e.fd_tty);
+			tputs(tgetstr("me", NULL), 1, tputs_putchar);
+
+		}
+		else
+			ft_putstr_fd(tmp->data, g_e.fd_tty);
 		tmp = tmp->next;
+	}
+	reset_cursor(l->size_lst);
+
+}
+
+void		print_prompt(void)
+{
+	extern t_env	g_e;
+
+		ft_putstr_fd(PROMPT, g_e.fd_tty);
+}
+
+
+void		ft_print(char **line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] != '\0')
+	{
+		ft_putstr(line[i]);
+		ft_putchar('\n');
+		i++;
 	}
 }
