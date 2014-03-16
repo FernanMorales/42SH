@@ -63,7 +63,7 @@ t_ckbt_node	*sh_new_node_string(t_ckbt *tree)
 	t_sh_command	cmd;
 
 	cmd.type = SH_COMMAND_TYPE_EXEC;
-	cmd.argv = ckl_new(t_am_token);
+	cmd.argv = ckl_new(t_cks);
 	return (ckbt_new_node(tree, &cmd));
 }
 
@@ -85,7 +85,7 @@ int			sh_parse_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 		tok = &ckl_data(t_am_token, tokens->first);
 		if (tok->type != SH_TOKEN_TYPE_STRING && tok->type != SH_TOKEN_TYPE_QUOTE_STRING)
 			return (1);
-		ckl_append(cmd->argv, tok);
+		ckl_append(cmd->argv, &tok->value_computed);
 		ckl_withdraw(tokens, tokens->first);
 	}
 	return (0);

@@ -14,6 +14,7 @@
 
 # define SH42_H
 
+# include <sys/wait.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -24,13 +25,17 @@
 # include "ckbt.h"
 # include "ckstd.h"
 # include "sh_parser.h"
+/*
 # include "ckf.h"
+*/
 
-typedef struct				s_ftsh_env
+extern char					*const *environ;
+
+typedef struct				s_sh_env
 {
 	t_cks					base;
 	int						last_ret;
 	int						tty_fd;
-}							t_ftsh_env;
+}							t_sh_env;
 
 #endif

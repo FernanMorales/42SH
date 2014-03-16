@@ -19,7 +19,7 @@ LIB = -L ../lexer/libcks/bin -l cks \
 	  -L ../lexer/libckbt/bin -l ckbt \
 	  -L ../lexer/libckstd/bin -l ckstd \
 	  -L ../lexer -l sh_parser \
-	  -L libckf/bin -l ckf
+	#  -L libckf/bin -l ckf
 INC = -I ../lexer -I ../lexer/libcks -I ../lexer/libckl -I ../lexer/libckbt \
 	  -I ../lexer/libckstd -I libckf
 CC = cc -g -Wall -Wextra -Werror
@@ -28,7 +28,7 @@ all: $(NAME)
 
 libs:
 	make -C ../lexer
-	make -C libckf
+	#make -C libckf
 
 $(NAME): $(OBJ) sh42.h libs
 	$(CC) $(OBJ) -o $(NAME) $(LIB) $(INC)
