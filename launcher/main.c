@@ -76,36 +76,94 @@ t_cks	*sh_get_argv(t_sh_command *cmd)
 }
 
 /*
-** format: arg [arg]*
-** where arg is a string
+** This MUST run in a fork, or else it will
+** take over the current process.
 */
-int		sh_execve(t_sh_env *env, t_sh_command *cmd)
+int		sh_execve(t_sh_command *cmd)
 {
 	t_cks		*argv;
-	pid_t		pid;
 
 	argv = sh_get_argv(cmd);
 	if (argv == NULL || argv[0] == NULL)
-		return (1);
+		exit(1);
+	if (argv == NULL || argv[0] == NULL)
+		exit(1);
+	execve(argv[0], argv, environ);
+	printf("execve failed with %s\n", argv[0]);
+	exit(1);
+}
+
+/*
+** format: arg [arg]*
+** where arg is a string
+*/
+int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
+{
+	pid_t		pid;
+
 	pid = fork();
 	if (pid == -1)
 	{
-		// error
+		// handle fork error
 	}
 	else if (pid == 0)
 	{
-		// son
-		execve(argv[0], argv, environ);
-		printf("execve failed with %s\n", argv[0]);
-		exit(1);
+		sh_execve(cmd);
 	}
 	else
 	{
-		// father with son PID
-		wait(NULL);
+		wait(NULL); // check return value here to check if the command succeeded or not
 	}
 	return (1);
 	(void)env;
+}
+
+int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
+{
+	pid_t			pid;
+	int				fd[2];
+	t_sh_command	*cmd;
+
+	if (root)
+	{
+		cmd = &ckbt_data(t_sh_command, root);
+		if (cmd->type == SH_COMMAND_TYPE_PIPE)
+		{
+			if (pipe(fd) != -1 && (pid = fork()) != -1)
+			{
+				if (pid == 0) // son
+				{
+					if (dup2(fd[1], 1) != -1)
+					{
+						close(fd[0]);
+						// check existence & type of root->left and root->right
+						sh_execve(&ckbt_data(t_sh_command, root->left));
+					}
+					exit(1);
+				}
+				else // father
+				{
+					if (dup2(fd[0], 0) != -1)
+					{
+						close(fd[1]);
+						return (sh_exec_pipe_cmd(env, tree, root->right));
+					}
+					return (1);
+				}
+			}
+		}
+		else if (cmd->type == SH_COMMAND_TYPE_EXEC)
+		{
+			if (pipe(fd) != -1)
+			{
+				sh_execve(cmd);
+			}
+			exit(1);
+		}
+	}
+	return (1);
+	(void)env;
+	(void)tree;
 }
 
 int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
@@ -120,13 +178,18 @@ int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 		cmd = &ckbt_data(t_sh_command, root);
 		if (cmd->type == SH_COMMAND_TYPE_EXEC)
 		{
-			return (sh_execve(env, cmd));
+			return (sh_exec_cmd(env, cmd));
 		}
 		else if (cmd->type == SH_COMMAND_TYPE_PIPE)
 		{
-			sh_exec_pipe(env, tree, root->left);
-			sh_exec_pipe(env, tree, root->right);
-			return (0);
+			if (fork() == 0)
+			{
+				exit(sh_exec_pipe_cmd(env, tree, root));
+			}
+			else
+			{
+				wait(NULL);
+			}
 		}
 		else
 		{
@@ -207,6 +270,7 @@ int		main(int argc, const char **argv)
 
 	if (sh_init_env(&env, argc, argv) == 0)
 	{
+		write(1, "$> ", 3);
 		while ((line = cks_get_line(0)) != NULL)
 		{
 			tree = ckbt_new(t_sh_command);
@@ -214,6 +278,7 @@ int		main(int argc, const char **argv)
 			ckbt_debug(tree, debug_tree);
 			printf("cmd ran OK: %d\n", sh_exec(&env, tree));
 			cks_free(line);
+			write(1, "$> ", 3);
 		}
 		/*
 		tree = ckbt_new(t_sh_command);
