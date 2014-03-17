@@ -25,9 +25,7 @@
 # include "ckbt.h"
 # include "ckstd.h"
 # include "sh_parser.h"
-/*
 # include "ckf.h"
-*/
 
 extern char					*const *environ;
 

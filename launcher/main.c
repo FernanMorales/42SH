@@ -24,8 +24,7 @@ int		sh_init_env(t_sh_env *env, int argc, const char **argv)
 	if ((tty = ttyname(0)) == NULL
 		|| (env->tty_fd = open(tty, O_WRONLY) == -1))
 		return (1);
-	//dir = ckf_dirname(argv[0]);
-	dir = cks_new("./");
+	dir = ckf_dirname(argv[0]);
 	if (dir == NULL || (env->base = cks_new(path)) == NULL
 		|| (env->base = cks_append(env->base, "/")) == NULL
 		|| (env->base = cks_append(env->base, dir)) == NULL)
@@ -274,7 +273,7 @@ int		main(int argc, const char **argv)
 		while ((line = cks_get_line(0)) != NULL)
 		{
 			tree = ckbt_new(t_sh_command);
-			error = sh_parse(line, tree, "./");
+			error = sh_parse(line, tree, env.base);
 			ckbt_debug(tree, debug_tree);
 			printf("cmd ran OK: %d\n", sh_exec(&env, tree));
 			cks_free(line);
