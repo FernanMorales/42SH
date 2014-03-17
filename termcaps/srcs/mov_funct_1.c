@@ -6,62 +6,54 @@
 /*   By: dtortera <dtortera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 17:34:49 by dtortera          #+#    #+#             */
-/*   Updated: 2014/03/10 19:51:55 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/15 22:19:43 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <term.h>
 #include "ft_term.h"
 
-
-#include "libft.h"
-
 void	del_one(t_lst *l)
 {
-	if (l->cur->size_lst == 1)
+	if (l->size_lst == 1)
 		return ;
-	if (l->cur->cursor != NULL)
-	{
-		del_elem(l->cur, l->cur->cursor);
-		l->cur->cursor = l->cur->cursor->prev;
-		cur_print(l->cur);
-	}
+	del_elem(l, l->cursor->prev);
+	print_lst(l);
 }
 
 void	move_right(t_lst *l)
 {
-	t_elem		*tmp;
-
-	tmp = l->cur->last;
-	if (l->cur->cursor != NULL)
+	if (l->cursor != l->last)
 	{
-		l->cur->cursor = l->cur->cursor->next;
-		cur_print(l->cur);
+		l->cursor = l->cursor->next;
+		print_lst(l);
 	}
 }
 
 void	move_left(t_lst *l)
 {
-	t_elem		*tmp;
-
-	tmp = l->cur->last;
-	if (l->cur->cursor != NULL)
+	if (l->cursor != l->first)
 	{
-		l->cur->cursor = l->cur->cursor->prev;
-		cur_print(l->cur);
+		l->cursor = l->cursor->prev;
+		print_lst(l);
 	}
 }
 
 void	move_up(t_lst *l)
 {
-	if (!l->cur->cursor->prev)
-		l->cur->cursor = l->cur->cursor->prev;
+	(void)l;
+	// if (!l->histo)
+	// 	return ;
+	// else
+	// {
+	// 	l->histo->last = l->frist;
+	//
+	// }
 }
 
 void	move_down(t_lst *l)
 {
-	if (!l->cur->cursor->next)
-		l->cur->cursor = l->cur->cursor->next;
+		(void)l;
 }
 
 void	save_in_string(t_lst *l)
@@ -70,11 +62,14 @@ void	save_in_string(t_lst *l)
 	int	i;
 
 	i = 0;
-	tmp = l->cur->first;
-	l->str_return = (char *)malloc(sizeof(char) * (l->cur->size_lst + 1));
-	while (i < l->cur->size_lst)
+	tmp = l->first;
+	// l->histo = (t_lst **)malloc(sizeof(t_lst *));
+	l->str_return = (char *)malloc(sizeof(char) * (l->size_lst + 1));
+	while (i < l->size_lst)
 	{
-		l->str_return[i] = tmp->data[0];
+		l->str_return[i] = tmp->data;
 		tmp = tmp->next;
+		i++;
 	}
+	l->str_return[i] = '\0';
 }

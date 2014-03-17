@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/02/25 14:35:37 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/11 14:44:04 by pvarin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -56,20 +45,30 @@ int			press_key(t_lst *l, char *buf)
 	return (0);
 }
 
+/* void		insert_char_to_list(t_lst *l, char *buf) */
+/* { */
+
+/* 	if (l->cur->size_lst == 1) */
+/* 	{ */
+/* 		insert_cur_top(l, buf); */
+/* 	} */
+/* 	else */
+/* 	{ */
+/* 		insert_cur_position(l, l->cur->cursor, buf); */
+/* 	} */
+/* 	print_lst(l->cur); */
+/* } */
 void		insert_char_to_list(t_lst *l, char *buf)
 {
-	if (l->cur->size_lst == 0)
+	if (l->size_lst == 1)
 	{
-		insert_empty_lst(l->cur, buf);
-		insert_cur_position(l, l->cur->first, " ");
-		l->cur->cursor = l->cur->first;
+		insert_top(l, buf[0]);
 	}
 	else
 	{
-		insert_cur_position(l, l->cur->cursor, buf);
+		insert_pos(l, l->cursor, buf[0]);
 	}
-	if (l != NULL && l->cur->size_lst != 0)
-		cur_print(l->cur);
+	print_lst(l);
 }
 
 int		main(int ac, char **av, char **envp)
@@ -79,13 +78,12 @@ int		main(int ac, char **av, char **envp)
 	extern t_env	g_e;
 	t_lst	*l;
 
-	l = (t_lst *)malloc(sizeof(t_lst));
-	init_list(l);
+	(void)av;
+	l = init_list();
 	init_env(&g_e, envp);
 	init_term(&g_e);
 	if (ac != 1)
 		return (1);
-	printf("%s\n", av[0]);
 	print_prompt();
 	while ((ret = read(0, buf, 8)) != 0)
 	{

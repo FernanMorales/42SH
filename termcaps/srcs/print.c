@@ -6,7 +6,7 @@
 /*   By: dtortera <dtortera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 17:47:32 by dtortera          #+#    #+#             */
-/*   Updated: 2014/03/07 19:29:11 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/15 21:54:12 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,34 @@ void		reset_cursor(int len)
 
 }
 
-void		cur_print(t_lst *l)//, t_env *e)
+void		print_lst(t_lst *l)
+{
+	extern t_env	g_e;
+	t_elem	*tmp;
+	int		i;
+
+	i = -1;
+	tmp = l->first;
+	tputs(tgetstr("cd", NULL), 1, tputs_putchar);
+	while (++i < l->size_lst)
+	{
+
+		if (tmp == l->cursor)
+		{
+			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
+			ft_putchar_fd(tmp->data, g_e.fd_tty);
+			tputs(tgetstr("me", NULL), 1, tputs_putchar);
+		}
+		else
+			ft_putchar_fd(tmp->data, g_e.fd_tty);
+		tmp = tmp->next;
+	}
+	reset_cursor(l->size_lst);
+
+}
+/*
+
+void		print_lst(t_lst *l)
 {
 	extern t_env	g_e;
 	t_elem	*tmp;
@@ -51,7 +78,6 @@ void		cur_print(t_lst *l)//, t_env *e)
 			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
 			ft_putstr_fd(tmp->data, g_e.fd_tty);
 			tputs(tgetstr("me", NULL), 1, tputs_putchar);
-
 		}
 		else
 			ft_putstr_fd(tmp->data, g_e.fd_tty);
@@ -60,7 +86,7 @@ void		cur_print(t_lst *l)//, t_env *e)
 	reset_cursor(l->size_lst);
 
 }
-
+*/
 void		print_prompt(void)
 {
 	extern t_env	g_e;

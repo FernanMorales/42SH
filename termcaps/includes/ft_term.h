@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/01 16:20:57 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/11 14:44:06 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/15 22:18:44 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define K_CTRL_L "\14\0\0\0\0\0\0\0"
 # define K_DEL_L "\177\0\0\0\0\0\0\0"
 # define K_DEL_R "\033\133\063\176\0\0\0\0"
-# define K_RETURN "\033\133\012\0\0\0\0\0"
+# define K_RETURN "\012\0\0\0\0\0\0\0"
 # define K_ECHAP 27
 # define PROMPT "42sh > "
 
@@ -48,9 +48,7 @@ enum				e_exit
 
 typedef struct		s_elem
 {
-	char				*data;
-	int				selected;
-	int				size_data;
+	char				data;
 	struct s_elem		*next;
 	struct s_elem		*prev;
 }					t_elem;
@@ -61,9 +59,8 @@ typedef struct		s_lst
 	t_elem			*last;
 	t_elem			*cursor;
 	int				size_lst;
+	struct s_lst	*histo;
 	char			*str_return;
-	struct s_lst	*cur;
-	// size_t			max_size;
 }					t_lst;
 
 
@@ -85,17 +82,26 @@ void		init_env(t_env *e, char **envp);
 */
 void		init_term(t_env *e);
 void		close_term(t_env *e);
-
+/*
+** list
+*/
+t_lst		*init_list(void);
+t_elem		*creat_elem(char data);
+void		insert_top(t_lst *l, char data);
+void		insert_pos(t_lst *l, t_elem *pos, char data);
+void		del_elem(t_lst *l, t_elem *cur);
 /*
 ** lst
-*/
-void		init_list(t_lst *l);
+
+t_lst		*init_list(void);
 int			insert_empty_lst(t_lst *l, char *data);
 int			insert_elem(t_lst *l, char *data);
 int			del_last_elem(t_lst *l);
 void		creat_lst(t_lst *l, char **av);
 void		del_elem(t_lst *l, t_elem *current);
 int			insert_cur_position(t_lst *l, t_elem *cur, const char *data);
+int			insert_cur_top(t_lst *l, char *data);
+*/
 /*
 ** ft_signal
 */
@@ -107,7 +113,7 @@ void		signal_handler(int sig);
 int			tputs_putchar(int c);
 void		ft_print(char **line);
 void		reset_cursor(int len);
-void		cur_print(t_lst *l);
+void		print_lst(t_lst *l);
 void		print_prompt(void);
 
 /*
