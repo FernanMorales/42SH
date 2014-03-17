@@ -274,8 +274,8 @@ int		main(int argc, const char **argv)
 		{
 			tree = ckbt_new(t_sh_command);
 			error = sh_parse(line, tree, env.base);
-			ckbt_debug(tree, debug_tree);
-			printf("cmd ran OK: %d\n", sh_exec(&env, tree));
+			//ckbt_debug(tree, debug_tree);
+			printf("status: %d\n", sh_exec(&env, tree));
 			cks_free(line);
 			write(1, "$> ", 3);
 		}

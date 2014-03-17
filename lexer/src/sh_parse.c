@@ -13,6 +13,9 @@
 #include "am.h"
 #include "sh.h"
 
+/*
+** use sh_print_tokens(tokens); to print
+*/
 int			sh_parse(const char *src, t_ckbt *tree, const char *basepath)
 {
 	t_ckl	*tokens;
@@ -25,6 +28,5 @@ int			sh_parse(const char *src, t_ckbt *tree, const char *basepath)
 	if (sh_lex(src, tokens) != 0)
 		return (-1);
 	sh_replace_redirections(tokens, basepath);
-	sh_print_tokens(tokens);
 	return (sh_build_tree(tokens, tree) ? -1 : 0);
 }
