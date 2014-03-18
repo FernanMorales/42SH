@@ -6,30 +6,47 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/08 11:30:19 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/18 11:12:55 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh42.h"
 
-int		sh_init_env(t_sh_env *env, int argc, const char **argv)
+int		sh_init_env_get_base(const char *prog, t_cks *base)
 {
 	char		*path;
-	char		*dir;
+	t_cks		dir;
+
+	if (prog[0] == '/' || (prog[0] == '.' && prog[1] == '/')
+		|| (prog[0] == '~' && prog[1] == '/'))
+	{
+		if ((path = getcwd(NULL, 0)) == NULL
+			|| (*base = cks_new("")) == NULL
+			|| (dir = ckf_dirname(prog)) == NULL
+			|| (*base = cks_append(*base, path)) == NULL
+			|| (*base = cks_append(*base, "/")) == NULL
+			|| (*base = cks_append(*base, dir)) == NULL)
+			return (1);
+		cks_free(dir);
+		free(path);
+		return (0);
+	}
+	if ((*base = cks_new("")) == NULL)
+		return (1);
+	return (0);	
+}
+
+int		sh_init_env(t_sh_env *env, int argc, const char **argv)
+{
 	const char	*tty;
 
-	path = getcwd(NULL, 0);
-	if (path == NULL || argc < 1 || argv == NULL || argv[0] == NULL)
+	if (argc < 1 || argv == NULL || argv[0] == NULL)
 		return (1);
 	if ((tty = ttyname(0)) == NULL
 		|| (env->tty_fd = open(tty, O_WRONLY) == -1))
 		return (1);
-	dir = ckf_dirname(argv[0]);
-	if (dir == NULL || (env->base = cks_new(path)) == NULL
-		|| (env->base = cks_append(env->base, "/")) == NULL
-		|| (env->base = cks_append(env->base, dir)) == NULL)
+	if (sh_init_env_get_base(argv[0], &env->base))
 		return (1);
-	cks_free(dir);
 	env->last_ret = 0;
 	return (0);
 }
