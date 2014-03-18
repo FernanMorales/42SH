@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/18 11:30:24 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/18 15:23:01 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,25 @@ t_cks	*sh_get_argv(t_sh_command *cmd)
 t_cks	sh_full_prog_from_path(t_cks full)
 {
 	const char	*path;
+	t_cks		cur;
+	t_ckl		*parts;
+	t_ckl_item	*item;
 
-	if ((path = getenv("PATH")) == NULL)
+	if ((path = getenv("PATH")) == NULL
+		|| (parts = cks_split(path, ":", 0)) == NULL)
 		return (NULL);
+	item = parts->first;
+	while (item)
+	{
+		cur = cks_dup(full);
+		cur = cks_prepend(cur, "/");
+		cur = cks_prepend(cur, ckl_data(t_cks, item));
+		if (ckf_access(cur, X_OK) == 0)
+			return (cur);
+		cks_free(cur);
+		item = item->next;
+	}
 	return (NULL);
-	return (full);
 }
 
 t_cks	sh_full_prog(t_cks prog)
@@ -129,7 +143,10 @@ int		sh_execve(t_sh_command *cmd)
 
 	argv = sh_get_argv(cmd);
 	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
+	{
+		printf("42sh: command not found\n");
 		exit(1);
+	}
 	execve(full_prog, argv, environ);
 	printf("execve failed with %s / %s\n", argv[0], full_prog);
 	exit(1);

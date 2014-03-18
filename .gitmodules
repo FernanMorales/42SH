@@ -13,3 +13,6 @@
 [submodule "launcher/libckf"]
 	path = launcher/libckf
 	url = git@github.com:conradkleinespel/libckf.git
+[submodule "launcher/libcks"]
+	path = launcher/libcks
+	url = git@github.com:conradkleinespel/libcks.git
