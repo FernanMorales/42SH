@@ -1,0 +1,43 @@
+Questions de la correction:
+
+-Une commande simple, par exemple un simple ls
+- emacs (ou vim pour ceux qui ont des gouts douteux) fichier.c
+- ls /bin /boot /sbin /dev /home
+- /bin/ls (tester une commande avec un PATH complet)
+- commande inconnue (comme trucmachin) `Command not found' (ou un message d'erreur similaire)
+
+- cd (retourne au home du user) -> 1 point
+- cd - (retourne au repertoire precedent) -> 1 point
+- cd /path/to/dir -> 1 point
+
+- env -> 0.5 point
+- setenv -> 0.5 point
+- unsetenv -> 0.5 point
+
+- Gestion du PATH en fonction des permissions (binaires) -> 1 point
+- Gestion complete des permissions -> 1 point
+- exit -> 1 point
+
+- Des espaces et/ou des tabulations un peu partout dans la ligne de commande ne perturbent pas l'execution de cette commande, de maniere similaire a sh, bash ou zsh -> 0.5 points
+- Une ligne de commande vide ne provoque pas d'erreur -> 0.5 point
+- Une ligne de commande vide avec des espaces ne provoque pas d'errueur -> 0.5 point
+
+- <ctrl> + c -> 0.5 points
+- <ctrl> + d -> 0.5 points
+
+- Gestion de '>' -> 2 points
+- Gestion de '<' -> 2 points
+- Gestion de '<<' -> 2 points
+- Gestion de '>>' -> 1 point
+- Gestion de ';' -> 1 point
+- Gestion de '|' -> 2 points
+
+- Prompt (avec des infos intelligentes) -> 1 point
+- Completion -> 1 point
+- Tilde -> 1 point
+- Table de hash pour les binaires -> 1 point
+- Si termcaps, tester "echo 42 | ./mysh ". Si c'est ok, -> 1 point
+- Algorithme de tri "lent" (tri à bulle, par sélection, insertion...) -> 1 point
+- Algorithme de tri "rapide" (tri par tas / abr, quicksort, ...) -> 2 points
+- Aggrégation de sorties de fichier (par exemple 'ls 2>&1' sous bash) -> 2 points
+- Bonus supplementaires qui vous plaisent -> n points
