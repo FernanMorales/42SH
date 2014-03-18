@@ -59,7 +59,7 @@ typedef struct		s_lst
 	t_elem			*last;
 	t_elem			*cursor;
 	int				size_lst;
-	struct s_lst	*histo;
+	struct s_lst	**histo;
 	char			*str_return;
 }					t_lst;
 
