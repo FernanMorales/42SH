@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/18 11:12:55 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/18 11:30:24 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,33 @@ t_cks	*sh_get_argv(t_sh_command *cmd)
 	return (argv);
 }
 
+t_cks	sh_full_prog_from_path(t_cks full)
+{
+	const char	*path;
+
+	if ((path = getenv("PATH")) == NULL)
+		return (NULL);
+	return (NULL);
+	return (full);
+}
+
+t_cks	sh_full_prog(t_cks prog)
+{
+	t_cks		full;
+	const char	*home;
+
+	if ((full = cks_dup(prog)) == NULL)
+		return (NULL);
+	if (full[0] == '~' && full[1] == '/')
+		if ((home = getenv("HOME")) == NULL
+			|| (full = cks_sub(full, 1)) == NULL
+			|| (full = cks_prepend(full, home)) == NULL)
+			return (NULL);
+	if (full[0] == '/' || (full[0] == '.' && full[1] == '/'))
+		return (full);
+	return (sh_full_prog_from_path(full));
+}
+
 /*
 ** This MUST run in a fork, or else it will
 ** take over the current process.
@@ -98,14 +125,13 @@ t_cks	*sh_get_argv(t_sh_command *cmd)
 int		sh_execve(t_sh_command *cmd)
 {
 	t_cks		*argv;
+	t_cks		full_prog;
 
 	argv = sh_get_argv(cmd);
-	if (argv == NULL || argv[0] == NULL)
+	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
 		exit(1);
-	if (argv == NULL || argv[0] == NULL)
-		exit(1);
-	execve(argv[0], argv, environ);
-	printf("execve failed with %s\n", argv[0]);
+	execve(full_prog, argv, environ);
+	printf("execve failed with %s / %s\n", argv[0], full_prog);
 	exit(1);
 }
 
@@ -145,19 +171,20 @@ int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 		cmd = &ckbt_data(t_sh_command, root);
 		if (cmd->type == SH_COMMAND_TYPE_PIPE)
 		{
+			if (!root->left || !root->right)
+				return (1);
 			if (pipe(fd) != -1 && (pid = fork()) != -1)
 			{
-				if (pid == 0) // son
+				if (pid == 0)
 				{
 					if (dup2(fd[1], 1) != -1)
 					{
 						close(fd[0]);
-						// check existence & type of root->left and root->right
 						sh_execve(&ckbt_data(t_sh_command, root->left));
 					}
 					exit(1);
 				}
-				else // father
+				else
 				{
 					if (dup2(fd[0], 0) != -1)
 					{
@@ -178,8 +205,6 @@ int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 		}
 	}
 	return (1);
-	(void)env;
-	(void)tree;
 }
 
 int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
