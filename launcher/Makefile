@@ -6,7 +6,7 @@
 #    By: ckleines <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/03/08 10:37:01 by ckleines          #+#    #+#              #
-#    Updated: 2014/03/08 11:10:22 by ckleines         ###   ########.fr        #
+#    Updated: 2014/03/18 11:34:49 by ckleines         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,3 +35,15 @@ $(NAME): $(OBJ) sh42.h libs
 
 %.o: %.c sh42.h libs
 	$(CC) -c -o $@ $< $(INC)
+
+clean:
+	make -C ../lexer clean
+	make -C libckf clean
+	rm -f $(OBJ)
+
+fclean: clean
+	make -C ../lexer fclean
+	make -C libckf fclean
+	rm -f $(NAME)
+
+re: fclean all
