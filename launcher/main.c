@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 10:45:44 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 11:38:39 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,20 @@ char		*types[5] = {
 void	debug_tree(t_ckbt *tree, t_ckbt_node *node)
 {
 	t_sh_command		*command;
+	t_ckl_item			*item;
 
 	command = &ckbt_data(t_sh_command, node);
-	write(2, types[command->type], ckstd_strlen(types[command->type]));
+	dprintf(2, "%s : ", types[command->type]);
+	if (command->argv)
+	{
+		item = command->argv->first;
+		while (item)
+		{
+			dprintf(2, " [ %s ] ", ckl_data(t_cks, item));
+			item = item->next;
+		}
+	}
+	dprintf(2, "\n");
 	(void)tree;
 }
 
@@ -316,7 +327,7 @@ int		main(int argc, const char **argv)
 		{
 			tree = ckbt_new(t_sh_command);
 			error = sh_parse(line, tree, env.base);
-			//ckbt_debug(tree, debug_tree);
+			ckbt_debug(tree, debug_tree);
 			if (!error)
 				printf("status: %d\n", sh_exec(&env, tree));
 			else

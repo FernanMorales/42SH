@@ -16,6 +16,3 @@
 [submodule "launcher/libcks"]
 	path = launcher/libcks
 	url = git@github.com:conradkleinespel/libcks.git
-[submodule "42sh-infile"]
-	path = 42sh-infile
-	url = git@github.com:conradkleinespel/cat-.git
