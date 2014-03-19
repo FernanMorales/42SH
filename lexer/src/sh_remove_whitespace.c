@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/05 17:49:18 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/05 18:10:32 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 14:02:08 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@
 void	sh_remove_whitespace(t_ckl *tokens)
 {
 	t_ckl_item	*item;
+	t_ckl_item	*next;
+	t_am_token	*token;
 
 	item = tokens->first;
 	while (item)
 	{
-		t_am_token	*token = &ckl_data(t_am_token, item);
+		next = item->next;
+		token = &ckl_data(t_am_token, item);
 		if (token->type == SH_TOKEN_TYPE_WHITESPACE)
 		{
 			cks_free(token->value_orig);
@@ -28,6 +31,6 @@ void	sh_remove_whitespace(t_ckl *tokens)
 			ckl_withdraw(tokens, item);
 			ckl_free_item(item);
 		}
-		item = item->next;
+		item = next;
 	}
 }

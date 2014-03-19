@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/05 17:45:24 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/05 17:46:09 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 14:06:38 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int		lexer_callback_single_quote_string_content(t_am *am)
 	while (i < cks_len(am->source) && am->source[i] != '\'')
 	{
 		if (am->source[i] == '$' || am->source[i] == '\\'
-			|| am->source[i] == '"' || am->source[i] == '`')
+			|| am->source[i] == '"' || am->source[i] == '`'
+			|| am->source[i] == '~')
 		{
 			orig = cks_append(orig, "\\\\\\");
 			computed = cks_append(computed, "\\");

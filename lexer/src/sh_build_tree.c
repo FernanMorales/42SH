@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/06 17:31:27 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 13:10:15 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 14:04:41 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ int			sh_parse_arg(t_ckl *tokens, t_sh_command *cmd)
 	t_am_token	*tok;
 
 	tok = &ckl_data(t_am_token, tokens->first);
-	ckl_append(cmd->argv, tok->value_computed);
+	ckl_append(cmd->argv, &tok->value_computed);
 	ckl_withdraw(tokens, tokens->first);
 	return (0);
 }
