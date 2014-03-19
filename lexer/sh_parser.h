@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 01:54:15 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 12:17:52 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 16:34:02 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,14 @@ typedef enum					e_sh_command_type
 	SH_COMMAND_TYPE_EXEC
 }								t_sh_command_type;
 
+/*
+** The `commands` item is used for piped commands
+** where the commands are executed sequentially.
+*/
 typedef struct					s_sh_command
 {
 	t_sh_command_type			type;
+	t_ckl						*commands;
 	t_ckl						*argv;
 	t_cks						in;
 	int							in_is_heredoc;

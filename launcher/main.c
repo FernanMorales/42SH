@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 14:04:44 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 16:41:04 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,43 @@ char		*types[5] = {
 void	debug_tree(t_ckbt *tree, t_ckbt_node *node)
 {
 	t_sh_command		*command;
+	t_sh_command		*cmd;
+	t_ckl_item			*cmd_item;
 	t_ckl_item			*item;
 
 	command = &ckbt_data(t_sh_command, node);
 	dprintf(2, "%s : ", types[command->type]);
-	dprintf(2, " in =>  %s ", command->in);
-	dprintf(2, " out =>  %s ", command->out);
 	if (command->argv)
 	{
+		dprintf(2, " in =>  %s ", command->in);
+		dprintf(2, " out =>  %s ", command->out);
 		item = command->argv->first;
 		while (item)
 		{
 			dprintf(2, " [ %s ] ", ckl_data(t_cks, item));
 			item = item->next;
+		}
+	}
+	if (command->commands)
+	{
+		cmd_item = command->commands->first;
+		while (cmd_item)
+		{
+			dprintf(2, "COMMAND => ");
+			cmd = &ckl_data(t_sh_command, cmd_item);
+			dprintf(2, " in =>  %s ", cmd->in);
+			dprintf(2, " out =>  %s ", cmd->out);
+			if (cmd->argv)
+			{
+				item = cmd->argv->first;
+				while (item)
+				{
+					dprintf(2, " [ %s ] ", ckl_data(t_cks, item));
+					item = item->next;
+				}
+			}
+			dprintf(2, " // ");
+			cmd_item = cmd_item->next;
 		}
 	}
 	dprintf(2, "\n");
@@ -166,6 +190,65 @@ int		sh_execve(t_sh_command *cmd)
 	exit(1);
 }
 
+int		sh_heredoc(t_sh_command *cmd)
+{
+	t_cks		line;
+	int			has_stop;
+	int			fd;
+
+	if (cmd->in == NULL || cmd->in_is_heredoc == 0)
+		return (0);
+	fd = open("/tmp/42sh-heredoc", O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	if (fd != -1)
+	{
+		has_stop = 0;
+		while ((line = cks_get_line(0)) != NULL)
+		{
+			if (cks_cmp_len(cmd->in, line, cks_len(line)) == 0)
+			{
+				has_stop = 1;
+				break ;
+			}
+			write(fd, line, cks_len(line));
+			write(fd, "\n", 1);
+		}
+		if (has_stop)
+		{
+			close(fd);
+			if ((fd = open("/tmp/42sh-heredoc", O_RDONLY)) != -1)
+				dup2(fd, 0);
+		}
+	}
+	return (1);
+}
+
+int		sh_infile(t_sh_command *cmd)
+{
+	int		fd;
+
+	if (cmd->in == NULL || cmd->in_is_heredoc == 1)
+		return (0);
+	fd = open(cmd->in, O_RDONLY);
+	if (fd != -1)
+	{
+		dup2(fd, 0);
+		return (0);
+	}
+	return (1);
+}
+
+int		sh_outfile(t_sh_command *cmd)
+{
+	int		fd;
+
+	if ((fd = open(cmd->out, O_WRONLY | O_CREAT | ((cmd->out_append) ? O_APPEND : O_TRUNC), 0777)) != -1)
+	{
+		close(1);
+		dup2(fd, 1);
+	}
+	return (1);
+}
+
 /*
 ** format: arg [arg]*
 ** where arg is a string
@@ -178,6 +261,9 @@ int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
 	pid = fork();
 	if (pid == 0)
 	{
+		sh_heredoc(cmd);
+		sh_infile(cmd);
+		sh_outfile(cmd);
 		sh_execve(cmd);
 	}
 	else if (pid > 0)
@@ -205,20 +291,24 @@ int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 			{
 				if (pid == 0)
 				{
+					close(1);
+					close(fd[0]);
 					if (dup2(fd[1], 1) != -1)
 					{
-						close(fd[0]);
-						sh_execve(&ckbt_data(t_sh_command, root->left));
+						cmd = &ckbt_data(t_sh_command, root->left);
+						sh_heredoc(cmd);
+						sh_infile(cmd);
+						sh_outfile(cmd);
+						sh_execve(cmd);
 					}
 					exit(1);
 				}
 				else
 				{
+					close(0);
+					close(fd[1]);
 					if (dup2(fd[0], 0) != -1)
-					{
-						close(fd[1]);
 						return (sh_exec_pipe_cmd(env, tree, root->right));
-					}
 					return (2);
 				}
 			}

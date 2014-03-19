@@ -1,0 +1,20 @@
+cat << heredoc | ls | wc -c
+
+fd_prev = { 0, 1 };
+fd_next = { 0, 1};
+
+foreach exec
+	create process struct
+	check heredoc, do heredoc in tmp file
+	fork =>
+		pipe(fd_next);
+		0 =>
+			dup2(fd_prev[0], 0);
+			dup2(fd_next[1], 1);
+			dup heredoc / infile / outfile
+			execve
+			exit(1);
+		> 0 =>
+			add pid to processes
+			fd_prev[0] = fd_next[0];
+wait(NULL);

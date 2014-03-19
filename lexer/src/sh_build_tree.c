@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/06 17:31:27 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 14:04:41 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 16:33:59 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ t_ckbt_node	*sh_new_node_pipe(t_ckbt *tree)
 
 	cmd.type = SH_COMMAND_TYPE_PIPE;
 	cmd.argv = NULL;
+	cmd.in = NULL;
+	cmd.in_is_heredoc = 0;
+	cmd.out = NULL;
+	cmd.out_append = 0;
 	return (ckbt_new_node(tree, &cmd));
 }
 
@@ -47,6 +51,10 @@ t_ckbt_node	*sh_new_node_semicolon(t_ckbt *tree)
 
 	cmd.type = SH_COMMAND_TYPE_SEMICOLON;
 	cmd.argv = NULL;
+	cmd.in = NULL;
+	cmd.in_is_heredoc = 0;
+	cmd.out = NULL;
+	cmd.out_append = 0;
 	return (ckbt_new_node(tree, &cmd));
 }
 
@@ -59,6 +67,10 @@ t_ckbt_node	*sh_new_node_logic(t_ckbt *tree, t_sh_token_type type)
 	else
 		cmd.type = SH_COMMAND_TYPE_OR;
 	cmd.argv = NULL;
+	cmd.in = NULL;
+	cmd.in_is_heredoc = 0;
+	cmd.out = NULL;
+	cmd.out_append = 0;
 	return (ckbt_new_node(tree, &cmd));
 }
 
@@ -294,7 +306,52 @@ int			sh_parse_cmd_line(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 	return (sh_parse_seq_cmd(tokens, tree, root));
 }
 
+void		sh_group_pipe_subcommands_do(t_ckbt_node *root, t_ckl *cmds)
+{
+	t_sh_command		*cmd;
+
+	if (root)
+	{
+		cmd = &ckbt_data(t_sh_command, root);
+		if (cmd->type == SH_COMMAND_TYPE_EXEC)
+			ckl_append(cmds, cmd);
+		else if (cmd->type == SH_COMMAND_TYPE_PIPE)
+		{
+			sh_group_pipe_subcommands_do(root->left, cmds);
+			sh_group_pipe_subcommands_do(root->right, cmds);
+		}
+	}
+}
+
+void		sh_group_pipe_subcommands(t_ckbt_node *root)
+{
+	t_sh_command		*cmd;
+
+	if (root)
+	{
+		cmd = &ckbt_data(t_sh_command, root);
+		if (cmd->type == SH_COMMAND_TYPE_PIPE)
+		{
+			cmd->commands = ckl_new(t_sh_command);
+			sh_group_pipe_subcommands_do(root->left, cmd->commands);
+			sh_group_pipe_subcommands_do(root->right, cmd->commands);
+			root->left = NULL;
+			root->right = NULL;
+		}
+		else
+		{
+			sh_group_pipe_subcommands(root->left);
+			sh_group_pipe_subcommands(root->right);
+		}
+	}
+}
+
 int			sh_build_tree(t_ckl *tokens, t_ckbt *tree)
 {
-	return (sh_parse_cmd_line(tokens, tree, &tree->root));
+	int		error;
+
+	if ((error = sh_parse_cmd_line(tokens, tree, &tree->root)))
+		return (error);
+	sh_group_pipe_subcommands(tree->root);
+	return (0);
 }
