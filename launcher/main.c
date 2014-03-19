@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 18:59:12 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 19:02:34 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,6 +326,7 @@ int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 				{
 					dprintf(2, "command %s has read %d and write %d\n", ckl_data(t_cks, c->argv->first), fd_next[0], write);
 					dup2(fd_next[0], 0);
+					sh_dup(c);
 					close(fd_next[0]);
 					close(fd_next[1]);
 					sh_execve(c);
