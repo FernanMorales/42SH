@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 11:38:39 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 13:13:35 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	debug_tree(t_ckbt *tree, t_ckbt_node *node)
 
 	command = &ckbt_data(t_sh_command, node);
 	dprintf(2, "%s : ", types[command->type]);
+	dprintf(2, " in =>  %s ", command->in);
+	dprintf(2, " out =>  %s ", command->out);
 	if (command->argv)
 	{
 		item = command->argv->first;

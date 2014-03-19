@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/06 17:31:27 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 10:53:55 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 13:10:15 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@
 **
 ** pipe_cmd := cmd [ | pipe_cmd ]*
 **
-** cmd := string [ string ]*
+** redir_op := << | < | > | >>
+**
+** redir := redir_op string
+**
+** cmd := [ redir ]* string [ string | redir ]*
 */
 
 t_ckbt_node	*sh_new_node_pipe(t_ckbt *tree)
@@ -64,31 +68,100 @@ t_ckbt_node	*sh_new_node_string(t_ckbt *tree)
 
 	cmd.type = SH_COMMAND_TYPE_EXEC;
 	cmd.argv = ckl_new(t_cks);
+	cmd.in = NULL;
+	cmd.in_is_heredoc = 0;
+	cmd.out = NULL;
+	cmd.out_append = 0;
 	return (ckbt_new_node(tree, &cmd));
+}
+
+int			sh_has_redirection(t_ckl *tokens)
+{
+	t_am_token	*tok1;
+	t_am_token	*tok2;
+
+	if (tokens->first == NULL || tokens->first->next == NULL)
+		return (0);
+	tok1 = &ckl_data(t_am_token, tokens->first);
+	tok2 = &ckl_data(t_am_token, tokens->first->next);
+	return ((tok1->type == SH_TOKEN_TYPE_REDIR_IN
+			|| tok1->type == SH_TOKEN_TYPE_HERE_DOC
+			|| tok1->type == SH_TOKEN_TYPE_REDIR_OUT
+			|| tok1->type == SH_TOKEN_TYPE_APPEND_REDIR_OUT)
+		&& (tok2->type == SH_TOKEN_TYPE_STRING
+			|| tok2->type == SH_TOKEN_TYPE_QUOTE_STRING));
+}
+
+int			sh_has_arg(t_ckl *tokens)
+{
+	t_am_token	*tok;
+
+	if (tokens->first == NULL)
+		return (0);
+	tok = &ckl_data(t_am_token, tokens->first);
+	return (tok->type == SH_TOKEN_TYPE_STRING
+		|| tok->type == SH_TOKEN_TYPE_QUOTE_STRING);
+}
+
+int			sh_parse_redirection(t_ckl *tokens, t_sh_command *cmd)
+{
+	t_am_token	*tok;
+	t_am_token	*arg;
+
+	tok = &ckl_data(t_am_token, tokens->first);
+	arg = &ckl_data(t_am_token, tokens->first->next);
+	if (tok->type == SH_TOKEN_TYPE_REDIR_IN
+		|| tok->type == SH_TOKEN_TYPE_HERE_DOC)
+	{
+		cmd->in = arg->value_computed;
+		cmd->in_is_heredoc = tok->type == SH_TOKEN_TYPE_HERE_DOC;
+	}
+	if (tok->type == SH_TOKEN_TYPE_REDIR_OUT
+		|| tok->type == SH_TOKEN_TYPE_APPEND_REDIR_OUT)
+	{
+		cmd->out = arg->value_computed;
+		cmd->out_append = tok->type == SH_TOKEN_TYPE_APPEND_REDIR_OUT;
+	}
+	ckl_withdraw(tokens, tokens->first);
+	ckl_withdraw(tokens, tokens->first);
+	return (0);
+}
+
+int			sh_parse_arg(t_ckl *tokens, t_sh_command *cmd)
+{
+	t_am_token	*tok;
+
+	tok = &ckl_data(t_am_token, tokens->first);
+	ckl_append(cmd->argv, tok->value_computed);
+	ckl_withdraw(tokens, tokens->first);
+	return (0);
 }
 
 int			sh_parse_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 {
-	t_am_token		*tok;
 	t_sh_command	*cmd;
 
 	*root = NULL;
 	if (tokens->first == NULL)
 		return (-1);
-	tok = &ckl_data(t_am_token, tokens->first);
-	if (tok->type != SH_TOKEN_TYPE_STRING && tok->type != SH_TOKEN_TYPE_QUOTE_STRING)
-		return (-1);
 	*root = sh_new_node_string(tree);
 	cmd = &ckbt_data(t_sh_command, *root);
-	while (tokens->first != NULL)
+	// redirections in front
+	while (sh_has_redirection(tokens))
+		sh_parse_redirection(tokens, cmd);
+	// redirections or arg
+	while (sh_has_redirection(tokens) || sh_has_arg(tokens))
 	{
-		tok = &ckl_data(t_am_token, tokens->first);
-		if (tok->type != SH_TOKEN_TYPE_STRING && tok->type != SH_TOKEN_TYPE_QUOTE_STRING)
-			return (1);
-		ckl_append(cmd->argv, &tok->value_computed);
-		ckl_withdraw(tokens, tokens->first);
+		if (sh_has_redirection(tokens))
+			sh_parse_redirection(tokens, cmd);
+		else
+			sh_parse_arg(tokens, cmd);
 	}
-	return (0);
+	// need at least the program name
+	if (cmd->argv->length == 0)
+		return (-1);
+	// return 0 if we're done or 1 if an unknown token appears
+	return (tokens->length != 0);
 }
 
 int			sh_parse_pipe_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)

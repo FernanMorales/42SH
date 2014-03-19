@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/06 17:31:03 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/06 18:41:36 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 12:18:45 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ int			sh_parse(const char *src, t_ckbt *tree, const char *basepath)
 		return (-2);
 	if (sh_lex(src, tokens) != 0)
 		return (-1);
-	sh_replace_redirections(tokens, basepath);
 	return (sh_build_tree(tokens, tree) ? -1 : 0);
+	basepath = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 01:54:15 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/07 02:54:20 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 12:17:52 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 # include "ckbt.h"
 # include "ckl.h"
+# include "cks.h"
 
 /*
 ** error codes:
@@ -72,6 +73,10 @@ typedef struct					s_sh_command
 {
 	t_sh_command_type			type;
 	t_ckl						*argv;
+	t_cks						in;
+	int							in_is_heredoc;
+	t_cks						out;
+	int							out_append;
 }								t_sh_command;
 
 extern char						*sh_types[19];
