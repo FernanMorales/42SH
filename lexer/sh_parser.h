@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 01:54:15 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 16:34:02 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 16:52:49 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct					s_sh_command
 	int							in_is_heredoc;
 	t_cks						out;
 	int							out_append;
+	int							heredoc_success;
 }								t_sh_command;
 
 extern char						*sh_types[19];

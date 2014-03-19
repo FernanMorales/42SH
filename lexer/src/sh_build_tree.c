@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/06 17:31:27 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 16:33:59 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 17:06:57 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_ckbt_node	*sh_new_node_pipe(t_ckbt *tree)
 	t_sh_command	cmd;
 
 	cmd.type = SH_COMMAND_TYPE_PIPE;
+	cmd.commands = NULL;
 	cmd.argv = NULL;
 	cmd.in = NULL;
 	cmd.in_is_heredoc = 0;
@@ -50,6 +51,7 @@ t_ckbt_node	*sh_new_node_semicolon(t_ckbt *tree)
 	t_sh_command	cmd;
 
 	cmd.type = SH_COMMAND_TYPE_SEMICOLON;
+	cmd.commands = NULL;
 	cmd.argv = NULL;
 	cmd.in = NULL;
 	cmd.in_is_heredoc = 0;
@@ -66,6 +68,7 @@ t_ckbt_node	*sh_new_node_logic(t_ckbt *tree, t_sh_token_type type)
 		cmd.type = SH_COMMAND_TYPE_AND;
 	else
 		cmd.type = SH_COMMAND_TYPE_OR;
+	cmd.commands = NULL;
 	cmd.argv = NULL;
 	cmd.in = NULL;
 	cmd.in_is_heredoc = 0;
@@ -79,6 +82,7 @@ t_ckbt_node	*sh_new_node_string(t_ckbt *tree)
 	t_sh_command	cmd;
 
 	cmd.type = SH_COMMAND_TYPE_EXEC;
+	cmd.commands = NULL;
 	cmd.argv = ckl_new(t_cks);
 	cmd.in = NULL;
 	cmd.in_is_heredoc = 0;

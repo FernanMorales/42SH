@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 16:41:04 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 18:59:12 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,11 +182,11 @@ int		sh_execve(t_sh_command *cmd)
 	// handle errors with appropriate message
 	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
 	{
-		printf("42sh: command not found\n");
+		dprintf(2, "42sh: command not found\n");
 		exit(1);
 	}
 	execve(full_prog, argv, environ);
-	printf("execve failed with %s / %s\n", argv[0], full_prog);
+	dprintf(2, "42sh: command not found\n");
 	exit(1);
 }
 
@@ -197,7 +197,7 @@ int		sh_heredoc(t_sh_command *cmd)
 	int			fd;
 
 	if (cmd->in == NULL || cmd->in_is_heredoc == 0)
-		return (0);
+		return (1);
 	fd = open("/tmp/42sh-heredoc", O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	if (fd != -1)
 	{
@@ -212,17 +212,28 @@ int		sh_heredoc(t_sh_command *cmd)
 			write(fd, line, cks_len(line));
 			write(fd, "\n", 1);
 		}
-		if (has_stop)
-		{
-			close(fd);
-			if ((fd = open("/tmp/42sh-heredoc", O_RDONLY)) != -1)
-				dup2(fd, 0);
-		}
+		cmd->heredoc_success = has_stop;
+		return (0);
 	}
 	return (1);
 }
 
-int		sh_infile(t_sh_command *cmd)
+int		sh_dup_heredoc(t_sh_command *cmd)
+{
+	int		fd;
+
+	if (!cmd->in || !cmd->in_is_heredoc || !cmd->heredoc_success)
+		return (0);
+	fd = open("/tmp/42sh-heredoc", O_RDONLY);
+	if (fd != -1)
+	{
+		dup2(fd, 0);
+		return (0);
+	}
+	return (1);
+}
+
+int		sh_dup_infile(t_sh_command *cmd)
 {
 	int		fd;
 
@@ -237,16 +248,26 @@ int		sh_infile(t_sh_command *cmd)
 	return (1);
 }
 
-int		sh_outfile(t_sh_command *cmd)
+int		sh_dup_outfile(t_sh_command *cmd)
 {
 	int		fd;
 
+	if (!cmd->out)
+		return (0);
 	if ((fd = open(cmd->out, O_WRONLY | O_CREAT | ((cmd->out_append) ? O_APPEND : O_TRUNC), 0777)) != -1)
 	{
 		close(1);
 		dup2(fd, 1);
 	}
 	return (1);
+}
+
+int		sh_dup(t_sh_command *cmd)
+{
+	sh_dup_heredoc(cmd);
+	sh_dup_infile(cmd);
+	sh_dup_outfile(cmd);
+	return (0);
 }
 
 /*
@@ -262,8 +283,7 @@ int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
 	if (pid == 0)
 	{
 		sh_heredoc(cmd);
-		sh_infile(cmd);
-		sh_outfile(cmd);
+		sh_dup(cmd);
 		sh_execve(cmd);
 	}
 	else if (pid > 0)
@@ -274,51 +294,67 @@ int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
 	return (0);
 }
 
-int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
+typedef struct				s_sh_process
 {
-	pid_t			pid;
-	int				fd[2];
-	t_sh_command	*cmd;
+	pid_t					pid;
+	t_sh_command			*cmd;
+}							t_sh_process;
 
-	if (root)
+int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
+{
+	int				fd_next[2] = { 0, 1 };
+	int				write;
+	t_ckl_item		*item;
+	t_sh_command	*c;
+	pid_t			pid;
+	t_ckl			*processes;
+	t_sh_process	p;
+
+	if (fork() == 0)
 	{
-		cmd = &ckbt_data(t_sh_command, root);
-		if (cmd->type == SH_COMMAND_TYPE_PIPE)
+		processes = ckl_new(t_sh_process);
+		item = cmd->commands->last;
+		write = 1;
+		while (item)
 		{
-			if (!root->left || !root->right)
-				return (1);
-			if (pipe(fd) != -1 && (pid = fork()) != -1)
+			c = &ckl_data(t_sh_command, item);
+			dprintf(2, "forking %s\n", ckl_data(t_cks, c->argv->first));
+			sh_heredoc(c);
+			if (pipe(fd_next) != -1 && (pid = fork()) != -1)
 			{
 				if (pid == 0)
 				{
-					close(1);
-					close(fd[0]);
-					if (dup2(fd[1], 1) != -1)
-					{
-						cmd = &ckbt_data(t_sh_command, root->left);
-						sh_heredoc(cmd);
-						sh_infile(cmd);
-						sh_outfile(cmd);
-						sh_execve(cmd);
-					}
-					exit(1);
+					dprintf(2, "command %s has read %d and write %d\n", ckl_data(t_cks, c->argv->first), fd_next[0], write);
+					dup2(fd_next[0], 0);
+					close(fd_next[0]);
+					close(fd_next[1]);
+					sh_execve(c);
 				}
-				else
+				if (pid > 0)
 				{
-					close(0);
-					close(fd[1]);
-					if (dup2(fd[0], 0) != -1)
-						return (sh_exec_pipe_cmd(env, tree, root->right));
-					return (2);
+					dup2(fd_next[1], 1);
+					close(fd_next[1]);
+					close(fd_next[0]);
+					p.pid = pid;
+					p.cmd = c;
+					ckl_append(processes, &p);
 				}
 			}
+			else
+				dprintf(2, "pipe or fork error\n");
+			item = item->prev;
 		}
-		else if (cmd->type == SH_COMMAND_TYPE_EXEC)
-		{
-			sh_exec_cmd(env, cmd);
-		}
+		close(write);
+		close(fd_next[1]);
+		close(fd_next[0]);
+		while (wait(NULL) != -1)
+			;
+		exit(1);
 	}
-	return (1);
+	wait(NULL);
+	return (0);
+	(void)env;
+	(void)cmd;
 }
 
 int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
@@ -332,17 +368,14 @@ int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 		{
 			return (sh_exec_cmd(env, cmd));
 		}
-		else if (cmd->type == SH_COMMAND_TYPE_PIPE)
+		else if (cmd->type == SH_COMMAND_TYPE_PIPE && cmd->commands)
 		{
-			if (fork() == 0)
-				exit(sh_exec_pipe_cmd(env, tree, root));
-			else
-				wait(NULL);
-			return (0);
+			return (sh_exec_pipe_routine(env, cmd));
 		}
 		return (3);
 	}
 	return (1);
+	(void)tree;
 }
 
 int		sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
