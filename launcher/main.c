@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 10:43:50 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 10:45:44 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,7 +317,10 @@ int		main(int argc, const char **argv)
 			tree = ckbt_new(t_sh_command);
 			error = sh_parse(line, tree, env.base);
 			//ckbt_debug(tree, debug_tree);
-			printf("status: %d\n", sh_exec(&env, tree));
+			if (!error)
+				printf("status: %d\n", sh_exec(&env, tree));
+			else
+				printf("42sh: syntax error\n");
 			cks_free(line);
 			write(1, "$> ", 3);
 		}
