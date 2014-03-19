@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:11:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/18 15:23:01 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/19 10:43:50 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ int		sh_execve(t_sh_command *cmd)
 	t_cks		full_prog;
 
 	argv = sh_get_argv(cmd);
+	// handle errors with appropriate message
 	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
 	{
 		printf("42sh: command not found\n");
@@ -159,22 +160,19 @@ int		sh_execve(t_sh_command *cmd)
 int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
 {
 	pid_t		pid;
+	int			stat;
 
 	pid = fork();
-	if (pid == -1)
-	{
-		// handle fork error
-	}
-	else if (pid == 0)
+	if (pid == 0)
 	{
 		sh_execve(cmd);
 	}
-	else
+	else if (pid > 0)
 	{
-		wait(NULL); // check return value here to check if the command succeeded or not
+		waitpid(pid, &stat, 0);
+		env->last_ret = (WIFEXITED(stat)) ? WEXITSTATUS(stat) : 1;
 	}
-	return (1);
-	(void)env;
+	return (0);
 }
 
 int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
@@ -208,17 +206,13 @@ int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 						close(fd[1]);
 						return (sh_exec_pipe_cmd(env, tree, root->right));
 					}
-					return (1);
+					return (2);
 				}
 			}
 		}
 		else if (cmd->type == SH_COMMAND_TYPE_EXEC)
 		{
-			if (pipe(fd) != -1)
-			{
-				sh_execve(cmd);
-			}
-			exit(1);
+			sh_exec_cmd(env, cmd);
 		}
 	}
 	return (1);
@@ -227,12 +221,9 @@ int		sh_exec_pipe_cmd(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 {
 	t_sh_command		*cmd;
-	int					error;
 
-	error = 1;
 	if (root)
 	{
-		error = 0;
 		cmd = &ckbt_data(t_sh_command, root);
 		if (cmd->type == SH_COMMAND_TYPE_EXEC)
 		{
@@ -241,20 +232,14 @@ int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 		else if (cmd->type == SH_COMMAND_TYPE_PIPE)
 		{
 			if (fork() == 0)
-			{
 				exit(sh_exec_pipe_cmd(env, tree, root));
-			}
 			else
-			{
 				wait(NULL);
-			}
+			return (0);
 		}
-		else
-		{
-			return (1);
-		}
+		return (3);
 	}
-	return (error);
+	return (1);
 }
 
 int		sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
@@ -262,10 +247,8 @@ int		sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 	t_sh_command		*cmd;
 	int					error;
 
-	error = 1;
 	if (root)
 	{
-		error = 0;
 		cmd = &ckbt_data(t_sh_command, root);
 		if (cmd->type == SH_COMMAND_TYPE_AND)
 		{
@@ -286,7 +269,7 @@ int		sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 			return (sh_exec_pipe(env, tree, root));
 		}
 	}
-	return (error);
+	return (1);
 }
 
 int		sh_exec_semi(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
