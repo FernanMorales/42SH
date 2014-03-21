@@ -49,12 +49,29 @@ SRC = \
 	  src/parser.c \
 	  src/sh_build_tree.c \
 	  src/sh_concat_strings.c \
+	  src/sh_group_pipe_subcommands.c \
+	  src/sh_group_pipe_subcommands_do.c \
+	  src/sh_has_arg.c \
+	  src/sh_has_redirection.c \
 	  src/sh_heredoc.c \
 	  src/sh_infile.c \
 	  src/sh_lex.c \
+	  src/sh_new_node_logic.c \
+	  src/sh_new_node_pipe.c \
+	  src/sh_new_node_semicolon.c \
+	  src/sh_new_node_string.c \
 	  src/sh_outfile.c \
 	  src/sh_outfile_append.c \
 	  src/sh_parse.c \
+	  src/sh_parse_actual_log_cmd.c \
+	  src/sh_parse_arg.c \
+	  src/sh_parse_cmd.c \
+	  src/sh_parse_cmd_line.c \
+	  src/sh_parse_log_cmd.c \
+	  src/sh_parse_num_log_ops.c \
+	  src/sh_parse_pipe_cmd.c \
+	  src/sh_parse_redirection.c \
+	  src/sh_parse_seq_cmd.c \
 	  src/sh_print_tokens.c \
 	  src/sh_remove_useless_tokens.c \
 	  src/sh_remove_whitespace.c \

@@ -68,4 +68,18 @@ int			sh_parse_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root);
 t_ckbt_node	*sh_new_node_logic(t_ckbt *tree, t_sh_token_type type);
 t_ckbt_node	*sh_new_node_semicolon(t_ckbt *tree);
 t_ckbt_node	*sh_new_node_pipe(t_ckbt *tree);
+void		sh_group_pipe_subcommands(t_ckbt_node *root);
+void		sh_group_pipe_subcommands_do(t_ckbt_node *root, t_ckl *cmds);
+t_ckbt_node	*sh_new_node_string(t_ckbt *tree);
+t_ckbt_node	*sh_new_node_logic(t_ckbt *tree, t_sh_token_type type);
+t_ckbt_node	*sh_new_node_pipe(t_ckbt *tree);
+t_ckbt_node	*sh_new_node_semicolon(t_ckbt *tree);
+int			sh_has_redirection(t_ckl *tokens);
+int			sh_parse_redirection(t_ckl *tokens, t_sh_command *cmd);
+int			sh_has_arg(t_ckl *tokens);
+int			sh_parse_arg(t_ckl *tokens, t_sh_command *cmd);
+int			sh_parse_actual_log_cmd(t_ckl *tokens, t_ckbt *tree,
+				t_ckbt_node **root, unsigned num_ops);
+unsigned	sh_parse_num_log_ops(t_ckl *tokens);
+int			sh_parse_log_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root);
 #endif
