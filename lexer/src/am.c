@@ -37,7 +37,8 @@ void	am_run(t_am *am)
 				else if (finder->type == AM_FINDER_TYPE_CALLBACK)
 					ret = AM_CALLBACK(finder->callback, am);
 				else if (finder->type == AM_FINDER_TYPE_AUTOMATON)
-					ret = AM_AUTOMATON(finder->callback, am, finder->arg, finder->join);
+					ret = AM_AUTOMATON(finder->callback, am, finder->arg,
+						finder->join);
 				if (ret == 1)
 					am->state_curr = finder->state_next;
 			}
@@ -89,7 +90,8 @@ void	am_add_token(t_am *am, t_cks orig, t_cks computed)
 	cks_free(nsource);
 }
 
-void	am_find_callback(t_am *am, t_am_meta meta, t_am_callback_finder_callback cb)
+void	am_find_callback(t_am *am, t_am_meta meta,
+			t_am_callback_finder_callback cb)
 {
 	t_am_finder		finder;
 
@@ -201,8 +203,16 @@ int		am_finder_automaton(t_am *am, t_am_maker maker)
 			while (item)
 			{
 				curr_token = &ckl_data(t_am_token, item);
-				joined_token.value_computed = cks_append_len(joined_token.value_computed, curr_token->value_computed, cks_len(curr_token->value_computed));
-				joined_token.value_orig = cks_append_len(joined_token.value_orig, curr_token->value_orig, cks_len(curr_token->value_orig));
+				joined_token.value_computed = cks_append_len(
+					joined_token.value_computed,
+					curr_token->value_computed,
+					cks_len(curr_token->value_computed)
+				);
+				joined_token.value_orig = cks_append_len(
+					joined_token.value_orig,
+					curr_token->value_orig,
+					cks_len(curr_token->value_orig)
+				);
 				item = item->next;
 			}
 			ckl_free_items(nam->tokens, am_free_token_content);
