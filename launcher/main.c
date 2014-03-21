@@ -33,7 +33,7 @@ int		sh_init_env_get_base(const char *prog, t_cks *base)
 	}
 	if ((*base = cks_new("")) == NULL)
 		return (1);
-	return (0);	
+	return (0);
 }
 
 int		sh_init_env(t_sh_env *env, int argc, const char **argv)
@@ -97,7 +97,7 @@ void	debug_tree(t_ckbt *tree, t_ckbt_node *node)
 					item = item->next;
 				}
 			}
-			dprintf(2, " // ");
+			dprintf(2, " / ");
 			cmd_item = cmd_item->next;
 		}
 	}
@@ -179,7 +179,6 @@ int		sh_execve(t_sh_command *cmd)
 	t_cks		full_prog;
 
 	argv = sh_get_argv(cmd);
-	// handle errors with appropriate message
 	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
 	{
 		dprintf(2, "42sh: command not found\n");
