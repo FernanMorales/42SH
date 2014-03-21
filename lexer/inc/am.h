@@ -83,11 +83,15 @@ void				am_find_end(t_am *am, t_am_meta meta);
 void				am_free(t_am *am);
 int					am_ok(t_am *am);
 void				am_reset(t_am *am);
-# define am_find_strings(am, meta, ...) _am_find_strings(am, meta, (char *[]){__VA_ARGS__, NULL})
-void				_am_find_strings(t_am *am, t_am_meta meta, char **strings);
 # define am_meta(...) ((t_am_meta){__VA_ARGS__})
 int					am_lex(t_am_maker maker, const char *source, t_ckl *tokens);
 void				am_free_token_content(void *t);
 void				am_sub_free(t_am *am);
+int					am_finder_automaton(t_am *am, t_am_maker maker);
+int					am_callback_is_end(t_am *am);
+int					am_finder_string(t_am *am, t_cks str);
+t_am				*am_make_whitespace_automaton(void);
+void				am_free_finder_content(void *f);
+int					am_callback_is_not_whitespace(t_am *am);
 
 #endif

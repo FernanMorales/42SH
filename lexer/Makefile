@@ -17,8 +17,26 @@ INC = -I libcks -I libckl -I libckstd -I inc -I libckbt -I .
 CFLAGS = -g -Wall -Wextra -Werror
 CC = cc $(CFLAGS) $(INC)
 SRC = \
-	  src/am.c \
+	  src/am_add_token.c \
+	  src/am_callback_is_end.c \
+	  src/am_callback_is_not_whitespace.c \
+	  src/am_find_automaton.c \
+	  src/am_find_callback.c \
+	  src/am_find_end.c \
+	  src/am_find_string.c \
+	  src/am_find_whitespace.c \
+	  src/am_finder_automaton.c \
+	  src/am_finder_string.c \
+	  src/am_free.c \
+	  src/am_free_finder_content.c \
+	  src/am_free_token_content.c \
 	  src/am_lex.c \
+	  src/am_make_whitespace_automaton.c \
+	  src/am_new.c \
+	  src/am_ok.c \
+	  src/am_reset.c \
+	  src/am_run.c \
+	  src/am_sub_free.c \
 	  src/is_not_meaningful.c \
 	  src/lexer_automaton_command_line_token.c \
 	  src/lexer_automaton_double_quote_string.c \
