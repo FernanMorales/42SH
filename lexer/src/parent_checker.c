@@ -64,7 +64,7 @@ int		sh_check_bracketing(const char *src)
 		if ((c = st_check_skipped(src + i, stack)) > 0)
 		{
 			i += c;
-			continue;
+			continue ;
 		}
 		c = 0;
 		c += st_do_one(src + i, stack,

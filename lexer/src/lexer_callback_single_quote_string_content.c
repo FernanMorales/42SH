@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_callback_single_quote_string_conten          :+:      :+:    :+:   */
+/*   lexer_callback_single_quote_string_content.c       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */

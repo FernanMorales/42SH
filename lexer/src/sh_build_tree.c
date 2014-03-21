@@ -244,7 +244,8 @@ int			sh_parse_actual_log_cmd(t_ckl *tokens, t_ckbt *tree,
 	cmd.argv = NULL;
 	*root = node = ckbt_new_node(tree, &cmd);
 	cmdp = &ckbt_data(t_sh_command, node);
-	if ((error = sh_parse_actual_log_cmd(tokens, tree, &node->left, num_ops - 1)) == 1)
+	error = sh_parse_actual_log_cmd(tokens, tree, &node->left, num_ops - 1);
+	if (error == 1)
 	{
 		if (tokens->first == NULL)
 			return (1);
