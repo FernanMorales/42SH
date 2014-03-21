@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 /*
 ** This MUST run in a fork, or else it will

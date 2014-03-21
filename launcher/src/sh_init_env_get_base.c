@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 int		sh_init_env_get_base(const char *prog, t_cks *base)
 {

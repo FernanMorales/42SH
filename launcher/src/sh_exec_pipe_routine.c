@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 {

@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 /*
 ** format: arg [arg]*

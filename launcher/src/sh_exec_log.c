@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 int		sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 {

@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 static char	*st_types[5] = {
 	"pipe",

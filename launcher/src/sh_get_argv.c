@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 t_cks	*sh_get_argv(t_sh_command *cmd)
 {

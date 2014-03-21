@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 int		sh_dup_heredoc(t_sh_command *cmd)
 {

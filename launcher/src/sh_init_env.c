@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 int		sh_init_env(t_sh_env *env, int argc, const char **argv)
 {

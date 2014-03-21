@@ -12,7 +12,25 @@
 
 NAME = 42sh
 SRC = \
-	main.c
+	  src/debug_tree.c \
+	  src/main.c \
+	  src/sh_dup.c \
+	  src/sh_dup_heredoc.c \
+	  src/sh_dup_infile.c \
+	  src/sh_dup_outfile.c \
+	  src/sh_exec.c \
+	  src/sh_exec_cmd.c \
+	  src/sh_exec_log.c \
+	  src/sh_exec_pipe.c \
+	  src/sh_exec_pipe_routine.c \
+	  src/sh_exec_semi.c \
+	  src/sh_execve.c \
+	  src/sh_full_prog.c \
+	  src/sh_full_prog_from_path.c \
+	  src/sh_get_argv.c \
+	  src/sh_heredoc.c \
+	  src/sh_init_env.c \
+	  src/sh_init_env_get_base.c
 OBJ = $(SRC:.c=.o)
 LIB = -L ../lexer/libcks/bin -l cks \
 	  -L ../lexer/libckl/bin -l ckl \
@@ -21,7 +39,7 @@ LIB = -L ../lexer/libcks/bin -l cks \
 	  -L ../lexer -l sh_parser \
 	  -L libckf/bin -l ckf
 INC = -I ../lexer -I ../lexer/libcks -I ../lexer/libckl -I ../lexer/libckbt \
-	  -I ../lexer/libckstd -I libckf
+	  -I ../lexer/libckstd -I libckf -I .
 CC = cc -g -Wall -Wextra -Werror
 
 all: $(NAME)

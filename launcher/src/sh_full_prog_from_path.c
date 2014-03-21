@@ -1,3 +1,4 @@
+#include "sh42.h"
 
 t_cks	sh_full_prog_from_path(t_cks full)
 {
