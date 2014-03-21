@@ -179,6 +179,7 @@ int		sh_execve(t_sh_command *cmd)
 	t_cks		full_prog;
 
 	argv = sh_get_argv(cmd);
+	// fix better error messages
 	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
 	{
 		dprintf(2, "42sh: command not found\n");
@@ -253,7 +254,8 @@ int		sh_dup_outfile(t_sh_command *cmd)
 
 	if (!cmd->out)
 		return (0);
-	if ((fd = open(cmd->out, O_WRONLY | O_CREAT | ((cmd->out_append) ? O_APPEND : O_TRUNC), 0777)) != -1)
+	if ((fd = open(cmd->out, O_WRONLY | O_CREAT
+		| ((cmd->out_append) ? O_APPEND : O_TRUNC), 0777)) != -1)
 	{
 		close(1);
 		dup2(fd, 1);
