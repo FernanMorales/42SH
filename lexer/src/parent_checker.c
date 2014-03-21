@@ -21,14 +21,19 @@ static size_t	st_check_skipped(const char *src, t_ckl *stack)
 {
 	if (*src == '\\')
 		return (2);
-	if (*src != '\'' && stack->last && ckl_data(int, stack->last) == SH_PARENT_CHECK_TYPE_SQ)
+	if (*src != '\'' && stack->last
+		&& ckl_data(int, stack->last) == SH_PARENT_CHECK_TYPE_SQ)
 		return (1);
 	return (0);
 }
 
-static size_t	st_do_one(const char *src, t_ckl *stack, t_sh_parent_check_corr corr)
+static size_t	st_do_one(
+					const char *src,
+					t_ckl *stack,
+					t_sh_parent_check_corr corr)
 {
-	if (ckstd_strlen(src) >= ckstd_strlen(corr.end) && strncmp(src, corr.end, ckstd_strlen(corr.end)) == 0)
+	if (ckstd_strlen(src) >= ckstd_strlen(corr.end)
+		&& strncmp(src, corr.end, ckstd_strlen(corr.end)) == 0)
 	{
 		if (stack->last && ckl_data(int, stack->last) == corr.type)
 		{
@@ -36,7 +41,8 @@ static size_t	st_do_one(const char *src, t_ckl *stack, t_sh_parent_check_corr co
 			return (ckstd_strlen(corr.end));
 		}
 	}
-	if (ckstd_strlen(src) >= ckstd_strlen(corr.start) && strncmp(src, corr.start, ckstd_strlen(corr.start)) == 0)
+	if (ckstd_strlen(src) >= ckstd_strlen(corr.start)
+		&& strncmp(src, corr.start, ckstd_strlen(corr.start)) == 0)
 	{
 		ckl_append(stack, &corr.type);
 		return (ckstd_strlen(corr.start));
@@ -61,10 +67,14 @@ int		sh_check_bracketing(const char *src)
 			continue;
 		}
 		c = 0;
-		c += st_do_one(src + i, stack, (t_sh_parent_check_corr){ "\"", "\"", SH_PARENT_CHECK_TYPE_DQ });
-		c += st_do_one(src + i, stack, (t_sh_parent_check_corr){ "'", "'", SH_PARENT_CHECK_TYPE_SQ });
-		c += st_do_one(src + i, stack, (t_sh_parent_check_corr){ "`", "`", SH_PARENT_CHECK_TYPE_BT });
-		c += st_do_one(src + i, stack, (t_sh_parent_check_corr){ "$(", ")", SH_PARENT_CHECK_TYPE_CS });
+		c += st_do_one(src + i, stack,
+			(t_sh_parent_check_corr){ "\"", "\"", SH_PARENT_CHECK_TYPE_DQ });
+		c += st_do_one(src + i, stack,
+			(t_sh_parent_check_corr){ "'", "'", SH_PARENT_CHECK_TYPE_SQ });
+		c += st_do_one(src + i, stack,
+			(t_sh_parent_check_corr){ "`", "`", SH_PARENT_CHECK_TYPE_BT });
+		c += st_do_one(src + i, stack,
+			(t_sh_parent_check_corr){ "$(", ")", SH_PARENT_CHECK_TYPE_CS });
 		i += ((c) ? c : 1);
 	}
 	if (!stack->last)

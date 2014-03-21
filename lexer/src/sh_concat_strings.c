@@ -35,8 +35,10 @@ void	sh_concat_strings(t_ckl *t)
 				{
 					if (sh_token_is_quoted_string(next))
 						tok->type = SH_TOKEN_TYPE_QUOTE_STRING;
-					tok->value_orig = cks_append(tok->value_orig, next->value_orig);
-					tok->value_computed = cks_append(tok->value_computed, next->value_computed);
+					tok->value_orig = cks_append(
+						tok->value_orig, next->value_orig);
+					tok->value_computed = cks_append(
+						tok->value_computed, next->value_computed);
 					prev = i;
 					i = i->next;
 					ckl_withdraw(t, prev);
