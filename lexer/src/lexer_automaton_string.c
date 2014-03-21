@@ -18,6 +18,8 @@ t_am	*lexer_automaton_string(void)
 	t_am		*am;
 
 	am = am_new(1);
-	am_find_callback(am, am_meta(.from=0, .to=1, .type=SH_TOKEN_TYPE_STRING), lexer_callback_string);
+	am_find_callback(am,
+		am_meta(.from = 0, .to = 1, .type = SH_TOKEN_TYPE_STRING),
+		lexer_callback_string);
 	return (am);
 }

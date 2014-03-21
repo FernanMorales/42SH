@@ -31,7 +31,6 @@
 **
 ** cmd := [ redir ]* string [ string | redir ]*
 */
-
 t_ckbt_node	*sh_new_node_pipe(t_ckbt *tree)
 {
 	t_sh_command	cmd;
@@ -162,10 +161,8 @@ int			sh_parse_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 		return (-1);
 	*root = sh_new_node_string(tree);
 	cmd = &ckbt_data(t_sh_command, *root);
-	// redirections in front
 	while (sh_has_redirection(tokens))
 		sh_parse_redirection(tokens, cmd);
-	// redirections or arg
 	while (sh_has_redirection(tokens) || sh_has_arg(tokens))
 	{
 		if (sh_has_redirection(tokens))
@@ -173,10 +170,8 @@ int			sh_parse_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root)
 		else
 			sh_parse_arg(tokens, cmd);
 	}
-	// need at least the program name
 	if (cmd->argv->length == 0)
 		return (-1);
-	// return 0 if we're done or 1 if an unknown token appears
 	return (tokens->length != 0);
 }
 
@@ -245,8 +240,8 @@ int			sh_parse_actual_log_cmd(t_ckl *tokens, t_ckbt *tree,
 		return (-1);
 	if (num_ops == 0)
 		return (sh_parse_pipe_cmd(tokens, tree, root));
-	cmd.type = -1; // unknown atm
-	cmd.argv = NULL; // we know it's an op !
+	cmd.type = -1;
+	cmd.argv = NULL;
 	*root = node = ckbt_new_node(tree, &cmd);
 	cmdp = &ckbt_data(t_sh_command, node);
 	if ((error = sh_parse_actual_log_cmd(tokens, tree, &node->left, num_ops - 1)) == 1)

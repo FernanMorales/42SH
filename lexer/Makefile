@@ -40,9 +40,6 @@ SRC = \
 	  src/sh_print_tokens.c \
 	  src/sh_remove_useless_tokens.c \
 	  src/sh_remove_whitespace.c \
-	  src/sh_replace_redirections.c \
-	  src/sh_replace_redirections_in.c \
-	  src/sh_replace_redirections_out.c \
 	  src/sh_token_is_quoted_string.c \
 	  src/sh_token_is_string.c \
 	  src/sh_type_is_op.c

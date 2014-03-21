@@ -18,8 +18,12 @@ t_am	*lexer_automaton_double_quote_string(void)
 	t_am		*am;
 
 	am = am_new(3);
-	am_find_string(am, am_meta(.from=0, .to=1, .type=SH_TOKEN_TYPE_DOUBLE_QUOTE), "\"");
-	am_find_callback(am, am_meta(.from=1, .to=2, .type=SH_TOKEN_TYPE_DOUBLE_QUOTE_STRING), lexer_callback_double_quote_string_content);
-	am_find_string(am, am_meta(.from=2, .to=3, .type=SH_TOKEN_TYPE_DOUBLE_QUOTE), "\"");
+	am_find_string(am, am_meta(.from = 0, .to = 1,
+		.type = SH_TOKEN_TYPE_DOUBLE_QUOTE), "\"");
+	am_find_callback(am,
+		am_meta(.from = 1, .to = 2, .type = SH_TOKEN_TYPE_DOUBLE_QUOTE_STRING),
+		lexer_callback_double_quote_string_content);
+	am_find_string(am,
+		am_meta(.from = 2, .to = 3, .type = SH_TOKEN_TYPE_DOUBLE_QUOTE), "\"");
 	return (am);
 }
