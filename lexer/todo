@@ -1,3 +1,0 @@
-- make whitespace finder iterative, not recursive
-- allow heredoc with quoted string (no variables)
-- allow empty strings for arguments
