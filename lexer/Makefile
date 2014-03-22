@@ -86,16 +86,18 @@ INCLUDES = inc/am.h inc/sh.h
 
 all: $(NAME)
 
-libs:
+$(NAME): $(OBJ) $(INCLUDES)
 	make -C libckstd
 	make -C libcks
 	make -C libckl
 	make -C libckbt
-
-$(NAME): $(OBJ) $(INCLUDES) libs
 	ar -rc $(NAME) $(OBJ)
 
-src/%.o: src/%.c $(INCLUDES) libs
+src/%.o: src/%.c $(INCLUDES)
+	make -C libckstd
+	make -C libcks
+	make -C libckl
+	make -C libckbt
 	$(CC) -c -o $@ $<
 
 clean:

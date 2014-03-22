@@ -23,9 +23,7 @@ int		sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root)
 				return (sh_exec_pipe(env, tree, root->right));
 		}
 		else
-		{
 			return (sh_exec_pipe(env, tree, root));
-		}
 	}
 	return (1);
 }

@@ -42,6 +42,8 @@ INC = -I ../lexer -I ../lexer/libcks -I ../lexer/libckl -I ../lexer/libckbt \
 	  -I ../lexer/libckstd -I libckf -I .
 CC = cc -g -Wall -Wextra -Werror
 
+.PHONY: all libs clean fclean re
+
 all: $(NAME)
 
 libs:
