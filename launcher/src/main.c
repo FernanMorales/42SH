@@ -26,9 +26,9 @@ int		main(int argc, const char **argv)
 		{
 			tree = ckbt_new(t_sh_command);
 			error = sh_parse(line, tree, env.base);
-			ckbt_debug(tree, debug_tree);
+			//ckbt_debug(tree, debug_tree);
 			if (!error)
-				printf("status: %d\n", sh_exec(&env, tree));
+				sh_exec(&env, tree);
 			else
 				printf("42sh: syntax error\n");
 			cks_free(line);
