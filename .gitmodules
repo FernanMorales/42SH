@@ -16,3 +16,12 @@
 [submodule "launcher/libcks"]
 	path = launcher/libcks
 	url = git@github.com:conradkleinespel/libcks.git
+[submodule "launcher/libckl"]
+	path = launcher/libckl
+	url = git@github.com:conradkleinespel/libckl.git
+[submodule "launcher/libckstd"]
+	path = launcher/libckstd
+	url = git@github.com:conradkleinespel/libckstd.git
+[submodule "launcher/libckbt"]
+	path = launcher/libckbt
+	url = git@github.com:conradkleinespel/libckbt.git

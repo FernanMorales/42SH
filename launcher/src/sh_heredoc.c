@@ -1,29 +1,35 @@
-#include "sh42.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sh_heredoc.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/03/06 17:28:02 by ckleines          #+#    #+#             */
+/*   Updated: 2014/03/06 17:28:15 by ckleines         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		sh_heredoc(t_sh_command *cmd)
+#include "am.h"
+#include "sh.h"
+
+void	sh_heredoc(t_ckl *tokens, t_ckl_item *start, const t_cks boundary,
+			const char *base)
 {
-	t_cks		line;
-	int			has_stop;
-	int			fd;
+	t_am_token		one;
+	t_am_token		two;
+	t_am_token		three;
 
-	if (cmd->in == NULL || cmd->in_is_heredoc == 0)
-		return (1);
-	fd = open("/tmp/42sh-heredoc", O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	if (fd != -1)
-	{
-		has_stop = 0;
-		while ((line = cks_get_line(0)) != NULL)
-		{
-			if (cks_cmp_len(cmd->in, line, cks_len(line)) == 0)
-			{
-				has_stop = 1;
-				break ;
-			}
-			write(fd, line, cks_len(line));
-			write(fd, "\n", 1);
-		}
-		cmd->heredoc_success = has_stop;
-		return (0);
-	}
-	return (1);
+	one.type = SH_TOKEN_TYPE_STRING;
+	one.value_orig = cks_append(cks_new(base), "42sh-heredoc");
+	one.value_computed = cks_append(cks_new(base), "42sh-heredoc");
+	two.type = SH_TOKEN_TYPE_STRING;
+	two.value_orig = cks_dup(boundary);
+	two.value_computed = cks_dup(boundary);
+	three.type = SH_TOKEN_TYPE_PIPE;
+	three.value_orig = cks_new("|");
+	three.value_computed = cks_new("|");
+	ckl_prepend_item(tokens, start, &one);
+	ckl_prepend_item(tokens, start, &two);
+	ckl_prepend_item(tokens, start, &three);
 }
