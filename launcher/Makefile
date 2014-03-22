@@ -100,7 +100,7 @@ LIB = -L libcks/bin -l cks \
 INC = -I libcks -I libckl -I libckbt \
 	  -I libckstd -I libckf -I . -I inc
 CC = cc -g -Wall -Wextra -Werror
-HEADERS = sh42.h sh_parser.h inc/am.h inc/sh.h
+HEADERS = inc/sh42.h inc/sh_parser.h inc/am.h inc/sh.h
 
 .PHONY: all clean fclean re
 
