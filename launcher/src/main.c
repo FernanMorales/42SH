@@ -27,7 +27,9 @@ int		main(int argc, const char **argv)
 			tree = ckbt_new(t_sh_command);
 			error = sh_parse(line, tree, env.base);
 			//ckbt_debug(tree, debug_tree);
-			if (error)
+			if (!error)
+				sh_exec(&env, tree);
+			else
 				printf("42sh: syntax error\n");
 			cks_free(line);
 			write(1, "$> ", 3);
