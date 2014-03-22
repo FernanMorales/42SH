@@ -18,7 +18,6 @@ int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 		while (item)
 		{
 			c = &ckl_data(t_sh_command, item);
-			dprintf(2, "forking %s\n", ckl_data(t_cks, c->argv->first));
 			sh_heredoc(c);
 			if (pipe(fd_next) != -1 && (pid = fork()) != -1)
 			{

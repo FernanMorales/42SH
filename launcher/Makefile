@@ -42,18 +42,18 @@ INC = -I ../lexer -I ../lexer/libcks -I ../lexer/libckl -I ../lexer/libckbt \
 	  -I ../lexer/libckstd -I libckf -I .
 CC = cc -g -Wall -Wextra -Werror
 
-.PHONY: all libs clean fclean re
+.PHONY: all clean fclean re
 
 all: $(NAME)
 
-libs:
+$(NAME): $(OBJ) sh42.h
 	make -C ../lexer
 	make -C libckf
-
-$(NAME): $(OBJ) sh42.h libs
 	$(CC) $(OBJ) -o $(NAME) $(LIB) $(INC)
 
-%.o: %.c sh42.h libs
+%.o: %.c sh42.h
+	make -C ../lexer
+	make -C libckf
 	$(CC) -c -o $@ $< $(INC)
 
 clean:
