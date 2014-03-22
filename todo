@@ -1,0 +1,3 @@
+- allow empty arguments for commands, from lexing part
+- make space finder less recursive
+- 
