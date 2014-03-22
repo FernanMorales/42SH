@@ -107,17 +107,34 @@ HEADERS = sh42.h sh_parser.h inc/am.h inc/sh.h
 all: $(NAME)
 
 $(NAME): $(OBJ) $(HEADERS)
+	make -C libcks
+	make -C libckbt
+	make -C libckl
+	make -C libckstd
+	make -C libckf
 	$(CC) $(OBJ) -o $(NAME) $(LIB) $(INC)
 
 %.o: %.c $(HEADERS)
+	make -C libcks
+	make -C libckbt
+	make -C libckl
+	make -C libckstd
 	make -C libckf
 	$(CC) -c -o $@ $< $(INC)
 
 clean:
+	make -C libcks clean
+	make -C libckbt clean
+	make -C libckl clean
+	make -C libckstd clean
 	make -C libckf clean
 	rm -f $(OBJ)
 
 fclean: clean
+	make -C libcks fclean
+	make -C libckbt fclean
+	make -C libckl fclean
+	make -C libckstd fclean
 	make -C libckf fclean
 	rm -f $(NAME)
 
