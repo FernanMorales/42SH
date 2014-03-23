@@ -6,7 +6,7 @@
 #    By: ckleines <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/03/08 10:37:01 by ckleines          #+#    #+#              #
-#    Updated: 2014/03/18 11:34:49 by ckleines         ###   ########.fr        #
+#    Updated: 2014/03/23 15:21:52 by ckleines         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,6 @@ SRC = \
 	  src/sh_heredoc.c \
 	  src/sh_infile.c \
 	  src/sh_init_env.c \
-	  src/sh_init_env_get_base.c \
 	  src/sh_lex.c \
 	  src/sh_new_node_logic.c \
 	  src/sh_new_node_pipe.c \
