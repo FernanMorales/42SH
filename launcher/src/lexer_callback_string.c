@@ -13,21 +13,21 @@
 #include "am.h"
 #include "sh.h"
 
-void	st_concat_next(t_cks *orig, t_cks *computed, size_t *i, t_am *am)
+static void	st_concat_next(t_cks *orig, t_cks *computed, size_t *i, t_am *am)
 {
 	*orig = cks_append_len(*orig, am->source + *i, 2);
 	*computed = cks_append_len(*computed, am->source + *i + 1, 1);
 	*i += 2;
 }
 
-void	st_concat_curr(t_cks *orig, t_cks *computed, size_t *i, t_am *am)
+static void	st_concat_curr(t_cks *orig, t_cks *computed, size_t *i, t_am *am)
 {
 	*orig = cks_append_len(*orig, am->source + *i, 1);
 	*computed = cks_append_len(*computed, am->source + *i, 1);
 	(*i)++;
 }
 
-int		st_add_or_fail(t_cks orig, t_cks computed, t_am *am)
+int			st_add_or_fail(t_cks orig, t_cks computed, t_am *am)
 {
 	if (cks_len(orig) > 0)
 	{

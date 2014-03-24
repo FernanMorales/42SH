@@ -13,7 +13,21 @@
 #include "am.h"
 #include "sh.h"
 
-int		lexer_callback_double_quote_string_content(t_am *am)
+static void	st_concat_next(t_cks *orig, t_cks *computed, size_t *i, t_am *am)
+{
+	*orig = cks_append_len(*orig, am->source + *i, 2);
+	*computed = cks_append_len(*computed, am->source + *i + 1, 1);
+	*i += 2;
+}
+
+static void	st_concat_curr(t_cks *orig, t_cks *computed, size_t *i, t_am *am)
+{
+	*orig = cks_append_len(*orig, am->source + *i, 1);
+	*computed = cks_append_len(*computed, am->source + *i, 1);
+	(*i)++;
+}
+
+int			lexer_callback_double_quote_string_content(t_am *am)
 {
 	size_t		i;
 	t_cks		orig;
@@ -25,17 +39,9 @@ int		lexer_callback_double_quote_string_content(t_am *am)
 	while (i < cks_len(am->source) && am->source[i] != '"')
 	{
 		if (i + 1 < cks_len(am->source) && am->source[i] == '\\')
-		{
-			orig = cks_append_len(orig, am->source + i, 2);
-			computed = cks_append_len(computed, am->source + i + 1, 1);
-			i += 2;
-		}
+			st_concat_next(&orig, &computed, &i, am);
 		else if (am->source[i] != '\\')
-		{
-			orig = cks_append_len(orig, am->source + i, 1);
-			computed = cks_append_len(computed, am->source + i, 1);
-			i++;
-		}
+			st_concat_curr(&orig, &computed, &i, am);
 		else
 		{
 			cks_free(orig);
