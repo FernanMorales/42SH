@@ -13,32 +13,33 @@
 #include "am.h"
 #include "sh.h"
 
+void	st_add_tokens(t_ckl *from, t_ckl *to)
+{
+	t_ckl_item	*item;
+
+	item = from->first;
+	while (item)
+	{
+		ckl_append(to, &ckl_data(t_am_token, item));
+		item = item->next;
+	}
+}
+
 int		am_lex(t_am_maker maker, const char *source, t_ckl *tokens)
 {
 	t_am		*am;
-	t_ckl_item	*item;
 	int			error;
 
 	am = maker();
 	am->source = cks_new(source);
 	am_run(am);
-	item = am->tokens->first;
-	while (item)
-	{
-		ckl_append(tokens, &ckl_data(t_am_token, item));
-		item = item->next;
-	}
+	st_add_tokens(am->tokens, tokens);
 	while (am_ok(am) == 1 && cks_len(am->source) > 0)
 	{
 		ckl_free_items(am->tokens, NULL);
 		ckl_free(am->tokens);
 		am_run(am);
-		item = am->tokens->first;
-		while (item)
-		{
-			ckl_append(tokens, &ckl_data(t_am_token, item));
-			item = item->next;
-		}
+		st_add_tokens(am->tokens, tokens);
 	}
 	error = !am_ok(am);
 	am_sub_free(am);
