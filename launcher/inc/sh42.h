@@ -71,5 +71,6 @@ int				sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
 int				sh_exec_semi(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
 int				sh_exec(t_sh_env *env, t_ckbt *tree);
 t_sh_builtin	*sh_cmd_to_builtin(t_sh_command *cmd);
+int				sh_preprocess_cmd(t_sh_env *env, t_sh_command *cmd);
 
 #endif

@@ -30,7 +30,7 @@ void	st_dup(pid_t pid, int fd_next[2], t_sh_command *c)
 	}
 }
 
-void	st_exec(t_ckl *commands, int *last_pid)
+void	st_exec(t_ckl *commands, int *last_pid, t_sh_env *env)
 {
 	int				fd_next[2] = { 0, 1 };
 	t_ckl_item		*item;
@@ -41,6 +41,7 @@ void	st_exec(t_ckl *commands, int *last_pid)
 	while (item)
 	{
 		c = &ckl_data(t_sh_command, item);
+		sh_preprocess_cmd(env, c);
 		sh_heredoc(c);
 		if (pipe(fd_next) != -1 && (pid = fork()) != -1)
 		{
@@ -73,7 +74,7 @@ int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 	if (fork() == 0)
 	{
 		last_pid = -1;
-		st_exec(cmd->commands, &last_pid);
+		st_exec(cmd->commands, &last_pid, env);
 		st_wait(last_pid, env);
 		exit(env->last_ret);
 	}

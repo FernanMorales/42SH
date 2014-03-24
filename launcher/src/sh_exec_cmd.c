@@ -18,6 +18,8 @@ int				sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
 	int				stat;
 	t_sh_builtin	*builtin;
 
+	if (sh_preprocess_cmd(env, cmd))
+		return (1);
 	if ((builtin = sh_cmd_to_builtin(cmd)) != NULL && builtin->func != NULL)
 		return (builtin->func(env, cmd), 0);
 	pid = fork();
