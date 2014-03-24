@@ -15,7 +15,6 @@
 int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 {
 	int				fd_next[2] = { 0, 1 };
-	int				write;
 	t_ckl_item		*item;
 	t_sh_command	*c;
 	pid_t			pid;
@@ -23,7 +22,6 @@ int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 	if (fork() == 0)
 	{
 		item = cmd->commands->last;
-		write = 1;
 		while (item)
 		{
 			c = &ckl_data(t_sh_command, item);
@@ -45,13 +43,8 @@ int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 					close(fd_next[0]);
 				}
 			}
-			else
-				dprintf(2, "pipe or fork error\n");
 			item = item->prev;
 		}
-		close(write);
-		close(fd_next[1]);
-		close(fd_next[0]);
 		while (wait(NULL) != -1)
 			;
 		exit(1);
