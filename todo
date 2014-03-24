@@ -1,3 +1,3 @@
 - allow empty arguments for commands, from lexing part
 - make space finder less recursive
-- 
+- test return values with piped commands in sh_exec_pipe_routine.c 

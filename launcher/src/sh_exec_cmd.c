@@ -30,8 +30,8 @@ int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
 	}
 	else if (pid > 0)
 	{
-		waitpid(pid, &stat, 0);
-		env->last_ret = (WIFEXITED(stat)) ? WEXITSTATUS(stat) : 1;
+		if (waitpid(pid, &stat, 0) != -1)
+			env->last_ret = (WIFEXITED(stat)) ? WEXITSTATUS(stat) : 1;
 	}
 	return (0);
 }
