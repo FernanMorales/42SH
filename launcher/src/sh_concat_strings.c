@@ -13,12 +13,34 @@
 #include "sh.h"
 #include "am.h"
 
+void	st_concat(t_ckl_item **item, t_am_token *tok, t_ckl *t)
+{
+	t_ckl_item	*i;
+	t_am_token	*next;
+	t_ckl_item	*prev;
+
+	i = *item;
+	while (i != NULL && (next = &ckl_data(t_am_token, i)) != NULL)
+	{
+		if (!sh_token_is_string(next))
+			break ;
+		if (sh_token_is_quoted_string(next))
+			tok->type = SH_TOKEN_TYPE_QUOTE_STRING;
+		tok->value_orig = cks_append(
+			tok->value_orig, next->value_orig);
+		tok->value_computed = cks_append(
+			tok->value_computed, next->value_computed);
+		prev = i;
+		i = i->next;
+		ckl_withdraw(t, prev);
+	}
+	*item = i;
+}
+
 void	sh_concat_strings(t_ckl *t)
 {
 	t_ckl_item	*i;
-	t_ckl_item	*prev;
 	t_am_token	*tok;
-	t_am_token	*next;
 
 	i = t->first;
 	while (i != NULL)
@@ -29,25 +51,7 @@ void	sh_concat_strings(t_ckl *t)
 			if (sh_token_is_quoted_string(tok))
 				tok->type = SH_TOKEN_TYPE_QUOTE_STRING;
 			i = i->next;
-			while (i != NULL && (next = &ckl_data(t_am_token, i)) != NULL)
-			{
-				if (sh_token_is_string(next))
-				{
-					if (sh_token_is_quoted_string(next))
-						tok->type = SH_TOKEN_TYPE_QUOTE_STRING;
-					tok->value_orig = cks_append(
-						tok->value_orig, next->value_orig);
-					tok->value_computed = cks_append(
-						tok->value_computed, next->value_computed);
-					prev = i;
-					i = i->next;
-					ckl_withdraw(t, prev);
-				}
-				else
-				{
-					break ;
-				}
-			}
+			st_concat(&i, tok, t);
 		}
 		if (i != NULL)
 			i = i->next;
