@@ -89,7 +89,9 @@ SRC = \
 	  src/sh_remove_whitespace.c \
 	  src/sh_token_is_quoted_string.c \
 	  src/sh_token_is_string.c \
-	  src/sh_type_is_op.c
+	  src/sh_type_is_op.c \
+	  src/sh_cmd_to_builtin.c \
+	  src/sh_builtin.c
 OBJ = $(SRC:.c=.o)
 LIB = -L libcks/bin -l cks \
 	  -L libckl/bin -l ckl \

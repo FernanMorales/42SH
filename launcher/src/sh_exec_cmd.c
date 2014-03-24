@@ -12,15 +12,14 @@
 
 #include "sh42.h"
 
-/*
-** format: arg [arg]*
-** where arg is a string
-*/
-int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
+int				sh_exec_cmd(t_sh_env *env, t_sh_command *cmd)
 {
-	pid_t		pid;
-	int			stat;
+	pid_t			pid;
+	int				stat;
+	t_sh_builtin	*builtin;
 
+	if ((builtin = sh_cmd_to_builtin(cmd)) != NULL && builtin->func != NULL)
+		return (builtin->func(env, cmd), 0);
 	pid = fork();
 	if (pid == 0)
 	{

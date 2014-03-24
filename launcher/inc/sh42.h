@@ -42,23 +42,34 @@ typedef struct				s_sh_process
 	t_sh_command			*cmd;
 }							t_sh_process;
 
-int		sh_init_env_get_base(const char *prog, t_cks *base);
-int		sh_init_env(t_sh_env *env, int argc, const char **argv);
-void	debug_tree(t_ckbt *tree, t_ckbt_node *node);
-t_cks	*sh_get_argv(t_sh_command *cmd);
-t_cks	sh_full_prog_from_path(t_cks full);
-t_cks	sh_full_prog(t_cks prog);
-int		sh_execve(t_sh_command *cmd);
-int		sh_heredoc(t_sh_command *cmd);
-int		sh_dup_heredoc(t_sh_command *cmd);
-int		sh_dup_infile(t_sh_command *cmd);
-int		sh_dup_outfile(t_sh_command *cmd);
-int		sh_dup(t_sh_command *cmd);
-int		sh_exec_cmd(t_sh_env *env, t_sh_command *cmd);
-int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd);
-int		sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
-int		sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
-int		sh_exec_semi(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
-int		sh_exec(t_sh_env *env, t_ckbt *tree);
+typedef void (*t_sh_builtin_func)(t_sh_env *, t_sh_command *);
+
+typedef struct				s_sh_builtin
+{
+	const char				*name;
+	t_sh_builtin_func		func;
+}							t_sh_builtin;
+
+extern t_sh_builtin	sh_builtin[];
+
+int				sh_init_env_get_base(const char *prog, t_cks *base);
+int				sh_init_env(t_sh_env *env, int argc, const char **argv);
+void			debug_tree(t_ckbt *tree, t_ckbt_node *node);
+t_cks			*sh_get_argv(t_sh_command *cmd);
+t_cks			sh_full_prog_from_path(t_cks full);
+t_cks			sh_full_prog(t_cks prog);
+int				sh_execve(t_sh_command *cmd);
+int				sh_heredoc(t_sh_command *cmd);
+int				sh_dup_heredoc(t_sh_command *cmd);
+int				sh_dup_infile(t_sh_command *cmd);
+int				sh_dup_outfile(t_sh_command *cmd);
+int				sh_dup(t_sh_command *cmd);
+int				sh_exec_cmd(t_sh_env *env, t_sh_command *cmd);
+int				sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd);
+int				sh_exec_pipe(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
+int				sh_exec_log(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
+int				sh_exec_semi(t_sh_env *env, t_ckbt *tree, t_ckbt_node *root);
+int				sh_exec(t_sh_env *env, t_ckbt *tree);
+t_sh_builtin	*sh_cmd_to_builtin(t_sh_command *cmd);
 
 #endif
