@@ -50,6 +50,22 @@ static size_t	st_do_one(
 	return (0);
 }
 
+int		st_check(const char *src, t_ckl *stack)
+{
+	int		c;
+
+	c = 0;
+	c += st_do_one(src, stack,
+		(t_sh_parent_check_corr){ "\"", "\"", SH_PARENT_CHECK_TYPE_DQ });
+	c += st_do_one(src, stack,
+		(t_sh_parent_check_corr){ "'", "'", SH_PARENT_CHECK_TYPE_SQ });
+	c += st_do_one(src, stack,
+		(t_sh_parent_check_corr){ "`", "`", SH_PARENT_CHECK_TYPE_BT });
+	c += st_do_one(src, stack,
+		(t_sh_parent_check_corr){ "$(", ")", SH_PARENT_CHECK_TYPE_CS });
+	return (c);
+}
+
 int		sh_check_bracketing(const char *src)
 {
 	size_t		len, i;
@@ -66,15 +82,7 @@ int		sh_check_bracketing(const char *src)
 			i += c;
 			continue ;
 		}
-		c = 0;
-		c += st_do_one(src + i, stack,
-			(t_sh_parent_check_corr){ "\"", "\"", SH_PARENT_CHECK_TYPE_DQ });
-		c += st_do_one(src + i, stack,
-			(t_sh_parent_check_corr){ "'", "'", SH_PARENT_CHECK_TYPE_SQ });
-		c += st_do_one(src + i, stack,
-			(t_sh_parent_check_corr){ "`", "`", SH_PARENT_CHECK_TYPE_BT });
-		c += st_do_one(src + i, stack,
-			(t_sh_parent_check_corr){ "$(", ")", SH_PARENT_CHECK_TYPE_CS });
+		c = st_check(src + i, stack);
 		i += ((c) ? c : 1);
 	}
 	if (!stack->last)
