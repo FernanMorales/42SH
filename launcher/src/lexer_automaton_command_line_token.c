@@ -13,14 +13,8 @@
 #include "am.h"
 #include "sh.h"
 
-t_am	*lexer_automaton_command_line_token(void)
+void	st_add_ops(t_am *am)
 {
-	t_am		*am;
-
-	am = am_new(1);
-	am_find_whitespace(am,
-		am_meta(.from = 0, .to = 1, .type = SH_TOKEN_TYPE_WHITESPACE));
-	am_find_end(am, am_meta(.from = 0, .to = 1));
 	am_find_string(am,
 		am_meta(.from = 0, .to = 1, .type = SH_TOKEN_TYPE_SEMICOLON), ";");
 	am_find_string(am,
@@ -41,6 +35,17 @@ t_am	*lexer_automaton_command_line_token(void)
 		am_meta(.from = 0, .to = 1, .type = SH_TOKEN_TYPE_REDIR_IN), "<");
 	am_find_string(am, am_meta(.from = 0, .to = 1,
 			.type = SH_TOKEN_TYPE_EXCLAMATION_POINT), "!");
+}
+
+t_am	*lexer_automaton_command_line_token(void)
+{
+	t_am		*am;
+
+	am = am_new(1);
+	am_find_whitespace(am,
+		am_meta(.from = 0, .to = 1, .type = SH_TOKEN_TYPE_WHITESPACE));
+	am_find_end(am, am_meta(.from = 0, .to = 1));
+	st_add_ops(am);
 	am_find_automaton(am,
 		am_meta(.from = 0, .to = 1, .join = 0), lexer_automaton_string);
 	am_find_automaton(am, am_meta(.from = 0, .to = 1, .join = 0),
