@@ -43,12 +43,6 @@ int		lexer_callback_double_quote_string_content(t_am *am)
 			return (0);
 		}
 	}
-	if (cks_len(orig) > 0)
-	{
-		am_add_token(am, orig, computed);
-		return (1);
-	}
-	cks_free(orig);
-	cks_free(computed);
-	return (0);
+	am_add_token(am, orig, computed);
+	return (1);
 }

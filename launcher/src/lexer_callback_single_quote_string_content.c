@@ -38,12 +38,6 @@ int		lexer_callback_single_quote_string_content(t_am *am)
 		computed = cks_append_len(computed, am->source + i, 1);
 		i++;
 	}
-	if (cks_len(orig) > 0)
-	{
-		am_add_token(am, orig, computed);
-		return (1);
-	}
-	cks_free(orig);
-	cks_free(computed);
-	return (0);
+	am_add_token(am, orig, computed);
+	return (1);
 }
