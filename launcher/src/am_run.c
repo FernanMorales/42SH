@@ -23,9 +23,7 @@ void	am_run(t_am *am)
 
 	am_reset(am);
 	am->tokens = ckl_new(t_am_token);
-	if (am->tokens != NULL)
-	{
-		item = am->finders->first;
+	if (am->tokens != NULL && (item = am->finders->first))
 		while (item)
 		{
 			finder = &ckl_data(t_am_finder, item);
@@ -44,5 +42,4 @@ void	am_run(t_am *am)
 			}
 			item = item->next;
 		}
-	}
 }
