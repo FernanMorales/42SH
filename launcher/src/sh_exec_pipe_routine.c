@@ -19,12 +19,9 @@ int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 	t_ckl_item		*item;
 	t_sh_command	*c;
 	pid_t			pid;
-	t_ckl			*processes;
-	t_sh_process	p;
 
 	if (fork() == 0)
 	{
-		processes = ckl_new(t_sh_process);
 		item = cmd->commands->last;
 		write = 1;
 		while (item)
@@ -46,9 +43,6 @@ int		sh_exec_pipe_routine(t_sh_env *env, t_sh_command *cmd)
 					dup2(fd_next[1], 1);
 					close(fd_next[1]);
 					close(fd_next[0]);
-					p.pid = pid;
-					p.cmd = c;
-					ckl_append(processes, &p);
 				}
 			}
 			else
