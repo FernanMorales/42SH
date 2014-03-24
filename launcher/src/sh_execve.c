@@ -25,10 +25,10 @@ int		sh_execve(t_sh_command *cmd)
 	// fix better error messages
 	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
 	{
-		dprintf(2, "42sh: command not found\n");
+		write(2, "42sh: command not found\n", 24);
 		exit(1);
 	}
 	execve(full_prog, argv, environ);
-	dprintf(2, "42sh: command not found\n");
+	write(2, "42sh: command not found\n", 24);
 	exit(1);
 }
