@@ -73,6 +73,7 @@ t_sh_builtin	*sh_cmd_to_builtin(t_sh_command *cmd);
 int				sh_preprocess_cmd(t_sh_env *env, t_sh_command *cmd);
 int				sh_builtin_cd(t_sh_env *env, t_sh_command *cmd);
 int				sh_builtin_echo(t_sh_env *env, t_sh_command *cmd);
+int				sh_builtin_exit(t_sh_env *env, t_sh_command *cmd);
 
 /*
 ** Environment.

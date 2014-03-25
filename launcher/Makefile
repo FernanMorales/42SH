@@ -103,7 +103,8 @@ SRC = \
 	  src/ms_posenv.c \
 	  src/ms_getenv.c \
 	  src/sh_builtin_cd.c \
-	  src/sh_builtin_echo.c
+	  src/sh_builtin_echo.c \
+	  src/sh_builtin_exit.c
 OBJ = $(SRC:.c=.o)
 LIB = -L libcks/bin -l cks \
 	  -L libckl/bin -l ckl \
