@@ -92,7 +92,13 @@ SRC = \
 	  src/sh_type_is_op.c \
 	  src/sh_cmd_to_builtin.c \
 	  src/sh_builtin.c \
-	  src/sh_preprocess_cmd.c
+	  src/sh_preprocess_cmd.c \
+	  #src/sh_builtin_cd.c \
+	  src/ms_environ_clear.c \
+	  src/ms_environ_clone.c \
+	  src/ms_environ_free.c \
+	  src/ms_environ_print.c \
+	  src/ms_environ_copy.c
 OBJ = $(SRC:.c=.o)
 LIB = -L libcks/bin -l cks \
 	  -L libckl/bin -l ckl \
