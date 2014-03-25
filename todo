@@ -1,3 +1,4 @@
 - make space finder less recursive
 - check if the first param of "setenv" contains a '='
 - check if the first param of "unsetenv" contains a '='
+- complete 'env' builtin
