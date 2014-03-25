@@ -5,3 +5,19 @@ pvarin
 dtortera
 tmalard
 fmorales
+
+Authorized functions:
+* `opendir`
+* `readdir`
+* `closedir`
+* `malloc`
+* `free`
+* `exit`
+* `getcwd`
+* `signal`
+* `isatty`
+* `ttyname`
+* `ioctl`
+* `getenv`
+* all of MAN 2
+* all of libtermcap

@@ -21,6 +21,9 @@ int		sh_init_env(t_sh_env *env, int argc, const char **argv)
 	if ((tty = ttyname(0)) == NULL
 		|| (env->tty_fd = open(tty, O_WRONLY) == -1))
 		return (1);
+	ms_environ_copy();
+	if (environ == NULL)
+		return (1);
 	env->last_ret = 0;
 	return (0);
 }
