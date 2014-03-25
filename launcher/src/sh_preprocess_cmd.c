@@ -7,7 +7,7 @@ int		st_preprocess_home(t_sh_env *env, t_cks *arg)
 
 	if ((*arg)[0] == '~' && ((*arg)[1] == '/' || !(*arg)[1]))
 	{
-		if ((home = getenv("HOME")) == NULL)
+		if ((home = ms_getenv("HOME")) == NULL)
 			return (1);
 		ns = cks_sub(*arg, 1);
 		cks_free(*arg);

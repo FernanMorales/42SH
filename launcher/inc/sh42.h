@@ -86,4 +86,6 @@ void			ms_setenv(const char *key,
 					const char *val, int32_t overwrite);
 void			ms_unsetenv(const char *key);
 int				ms_posenv(const char *key);
+const char		*ms_getenv(const char *key);
+
 #endif

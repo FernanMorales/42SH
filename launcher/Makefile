@@ -100,7 +100,8 @@ SRC = \
 	  src/ms_environ_copy.c \
 	  src/ms_setenv.c \
 	  src/ms_unsetenv.c \
-	  src/ms_posenv.c
+	  src/ms_posenv.c \
+	  src/ms_getenv.c
 	  # src/sh_builtin_cd.c
 OBJ = $(SRC:.c=.o)
 LIB = -L libcks/bin -l cks \

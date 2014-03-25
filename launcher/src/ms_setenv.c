@@ -42,7 +42,7 @@ void			ms_setenv(const char *key, const char *val, int32_t overwrite)
 		nenv[len] = environ[len];
 	nenv[len] = ckstd_strdup(str);
 	nenv[len + 1] = NULL;
-	ms_environ_free();
+	free(environ);
 	cks_free(str);
 	environ = nenv;
 }

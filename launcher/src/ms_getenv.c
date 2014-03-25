@@ -1,37 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sh_full_prog_from_path.c                           :+:      :+:    :+:   */
+/*   ms_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/03/23 15:22:01 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:22:02 by ckleines         ###   ########.fr       */
+/*   Created: 2013/12/31 14:53:23 by ckleines          #+#    #+#             */
+/*   Updated: 2014/01/26 12:04:09 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh42.h"
 
-t_cks	sh_full_prog_from_path(t_cks full)
+const char			*ms_getenv(const char *key)
 {
-	const char	*path;
-	t_cks		cur;
-	t_ckl		*parts;
-	t_ckl_item	*item;
+	size_t	len;
+	size_t	i;
 
-	if ((path = ms_getenv("PATH")) == NULL
-		|| (parts = cks_split(path, ":", 0)) == NULL)
+	if (environ == NULL)
 		return (NULL);
-	item = parts->first;
-	while (item)
+	len = ckstd_strlen(key);
+	i = 0;
+	while (environ[i])
 	{
-		cur = cks_dup(full);
-		cur = cks_prepend(cur, "/");
-		cur = cks_prepend(cur, ckl_data(t_cks, item));
-		if (ckf_access(cur, X_OK) == 0)
-			return (cur);
-		cks_free(cur);
-		item = item->next;
+		if (ckstd_strncmp(key, environ[i], len) == 0
+			&& ckstd_strlen(environ[i]) >= len
+			&& environ[i][len] == '=')
+			return (environ[i] + len + 1);
+		i++;
 	}
 	return (NULL);
 }
