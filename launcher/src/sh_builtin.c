@@ -2,7 +2,7 @@
 
 t_sh_builtin	sh_builtin[] = {
 	{ "cd", &sh_builtin_cd },
-	{ "echo", NULL },
+	{ "echo", &sh_builtin_echo },
 	{ "exit", NULL },
 	{ "env", NULL },
 	{ "setenv", NULL },
