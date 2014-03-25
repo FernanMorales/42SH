@@ -82,4 +82,8 @@ void			ms_environ_copy(void);
 void			ms_environ_free(void);
 void			ms_environ_print(char **env);
 
+void			ms_setenv(const char *key,
+					const char *val, int32_t overwrite);
+void			ms_unsetenv(const char *key);
+int				ms_posenv(const char *key);
 #endif

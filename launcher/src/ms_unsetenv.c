@@ -10,15 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ms.h"
-#include "ck.h"
+#include "sh42.h"
 
 void	ms_unsetenv(const char *key)
 {
-	int32_t		i;
-	int32_t		pos;
+	size_t		i;
+	size_t		pos;
 	char		**nargv;
-	int32_t		len;
+	size_t		len;
 
 	if ((pos = ms_posenv(key)) != -1)
 	{
