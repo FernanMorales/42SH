@@ -52,13 +52,16 @@ void		st_set_new_cwd(t_cks cwd, t_cks arg, int follow)
 		cwd = cks_append(cwd, "/");
 		cwd = cks_append(cwd, arg);
 		ms_setenv("PWD", cwd, 1);
+		write(1, cwd, ckstd_strlen(cwd));
 	}
 	else
 	{
 		ncwd = getcwd(NULL, 0);
 		ms_setenv("PWD", ncwd, 1);
+		write(1, ncwd, ckstd_strlen(ncwd));
 		free(ncwd);
 	}
+	write(1, "\n", 1);
 	cks_free(arg);
 	cks_free(cwd);
 }
@@ -77,7 +80,6 @@ int			st_change_dir(t_cks dir, int follow)
 	d = cwd = NULL;
 	if ((cwd = getcwd(NULL, 0)) && (d = cks_new(cwd)) && chdir(dir) != -1)
 	{
-		printf("change to %s\n", dir);
 		ms_setenv("OLDPWD", ms_getenv("PWD"), 1);
 		st_set_new_cwd(d, dir, follow);
 		free(cwd);
