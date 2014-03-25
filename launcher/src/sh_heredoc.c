@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/23 15:19:27 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:19:27 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/25 17:15:21 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		sh_heredoc(t_sh_command *cmd)
 	if (fd != -1)
 	{
 		has_stop = 0;
-		while ((line = cks_get_line(0)) != NULL)
+		while ((write(1, "> ", 2), (line = cks_get_line(0))) != NULL)
 		{
 			if (cks_cmp_len(cmd->in, line, cks_len(line)) == 0)
 			{
