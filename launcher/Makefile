@@ -104,7 +104,10 @@ SRC = \
 	  src/ms_getenv.c \
 	  src/sh_builtin_cd.c \
 	  src/sh_builtin_echo.c \
-	  src/sh_builtin_exit.c
+	  src/sh_builtin_exit.c \
+	  src/sh_builtin_setenv.c \
+	  src/sh_builtin_unsetenv.c \
+	  src/sh_builtin_env.c
 OBJ = $(SRC:.c=.o)
 LIB = -L libcks/bin -l cks \
 	  -L libckl/bin -l ckl \
