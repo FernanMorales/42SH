@@ -1,18 +1,18 @@
 #include "sh42.h"
 
-void	sh_prompt(void)
+void	sh_prompt(t_sh_env *env)
 {
 	const char	*user;
 	const char	*pwd;
 
 	user = ms_getenv("USER");
 	pwd = ms_getenv("PWD");
-	write(1, "[ ", 2);
+	write(env->tty_fd, "[ ", 2);
 	if (user)
-		write(1, user, ckstd_strlen(user));
+		write(env->tty_fd, user, ckstd_strlen(user));
 	if (user && pwd)
-		write(1, ":", 1);
+		write(env->tty_fd, ":", 1);
 	if (pwd)
-		write(1, pwd, ckstd_strlen(pwd));
-	write(1, " ] $> ", 6);
+		write(env->tty_fd, pwd, ckstd_strlen(pwd));
+	write(env->tty_fd, " ] $> ", 6);
 }

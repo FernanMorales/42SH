@@ -108,7 +108,11 @@ SRC = \
 	  src/sh_builtin_setenv.c \
 	  src/sh_builtin_unsetenv.c \
 	  src/sh_builtin_env.c \
-	  src/sh_prompt.c
+	  src/sh_prompt.c \
+	  src/sh_keys.c \
+	  src/sh_read_line.c \
+	  src/sh_get_key.c \
+	  src/sh_putc.c	
 OBJ = $(SRC:.c=.o)
 LIB = -L libcks/bin -l cks \
 	  -L libckl/bin -l ckl \

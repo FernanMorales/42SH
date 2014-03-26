@@ -32,6 +32,15 @@
 
 # define SH_COMMAND_BUF_SIZE (32768)
 
+# define SH_KEY_NEWLINE (0)
+# define SH_KEY_EOT (1)
+# define SH_KEY_ARROW_UP (2)
+# define SH_KEY_ARROW_DOWN (3)
+# define SH_KEY_ARROW_LEFT (4)
+# define SH_KEY_ARROW_RIGHT (5)
+# define SH_KEY_DELETE (6)
+# define SH_KEY_BACKSPACE (7)
+
 typedef struct				s_sh_env
 {
 	int						last_ret;
@@ -58,8 +67,10 @@ typedef struct				s_sh_builtin
 	t_sh_builtin_func		func;
 }							t_sh_builtin;
 
-extern t_sh_builtin	sh_builtin[];
-extern char	**environ;
+extern t_sh_builtin		sh_builtin[];
+extern char				**environ;
+extern t_sh_env			*g_sh_env;
+extern char				*sh_keys[];
 
 int				sh_init_env_get_base(const char *prog, t_cks *base);
 int				sh_init_env(t_sh_env *env, int argc, const char **argv);
@@ -102,6 +113,9 @@ void			ms_setenv(const char *key,
 void			ms_unsetenv(const char *key);
 int				ms_posenv(const char *key);
 const char		*ms_getenv(const char *key);
-void			sh_prompt(void);
+void			sh_prompt(t_sh_env *env);
+int				sh_get_key(char *buf);
+int				sh_putc(int c);
+t_cks			sh_read_line(t_sh_env *env);
 
 #endif

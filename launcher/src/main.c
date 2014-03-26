@@ -12,7 +12,9 @@
 
 #include "sh42.h"
 
-int		main(int argc, const char **argv)
+t_sh_env	*g_sh_env = NULL;
+
+int			main(int argc, const char **argv)
 {
 	t_sh_env		env;
 	int				error;
@@ -21,7 +23,10 @@ int		main(int argc, const char **argv)
 
 	if (sh_init_env(&env, argc, argv) == 0)
 	{
-		while ((sh_prompt(), (line = cks_get_line(0))) != NULL)
+		g_sh_env = &env;
+		printf("%s\n", sh_read_line(&env));
+		return (0);
+		while ((sh_prompt(&env), (line = cks_get_line(0))) != NULL)
 		{
 			tree = ckbt_new(t_sh_command);
 			error = sh_parse(line, tree);
