@@ -25,9 +25,11 @@ int		sh_init_env(t_sh_env *env, int argc, const char **argv)
 		|| tcgetattr(0, &env->term_new) == -1
 		|| (env->tty_fd = open(ttyname(0), O_RDWR)) == -1
 		|| (env->buf = (char *)malloc(SH_COMMAND_BUF_SIZE)) == NULL
-		|| (env->history = ckl_new(t_ckl *)) == NULL
-		|| (env->char_list = ckl_new(char)) == NULL)
+		|| (env->history = ckl_new(t_ckl *)) == NULL)
 		return (1);
+	env->char_list = NULL;
+	env->term_new.c_lflag &= ~(ECHO);
+	env->term_new.c_lflag &= ~(ICANON);
 	env->last_ret = 0;
 	env->cursor = 0;
 	return (0);

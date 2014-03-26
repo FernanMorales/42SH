@@ -21,8 +21,7 @@ int		main(int argc, const char **argv)
 
 	if (sh_init_env(&env, argc, argv) == 0)
 	{
-		write(1, "$> ", 3);
-		while ((line = cks_get_line(0)) != NULL)
+		while ((sh_prompt(), (line = cks_get_line(0))) != NULL)
 		{
 			tree = ckbt_new(t_sh_command);
 			error = sh_parse(line, tree);
@@ -32,7 +31,6 @@ int		main(int argc, const char **argv)
 			else
 				printf("42sh: syntax error\n");
 			cks_free(line);
-			write(1, "$> ", 3);
 		}
 		/*
 		tree = ckbt_new(t_sh_command);
