@@ -25,7 +25,7 @@ int		main(int argc, const char **argv)
 		while ((line = cks_get_line(0)) != NULL)
 		{
 			tree = ckbt_new(t_sh_command);
-			error = sh_parse(line, tree, env.base);
+			error = sh_parse(line, tree);
 			//ckbt_debug(tree, debug_tree);
 			if (!error)
 				sh_exec(&env, tree);

@@ -16,7 +16,7 @@
 /*
 ** use sh_print_tokens(tokens); to print
 */
-int			sh_parse(const char *src, t_ckbt *tree, const char *basepath)
+int			sh_parse(const char *src, t_ckbt *tree)
 {
 	t_ckl	*tokens;
 	int		brackets;
@@ -28,5 +28,4 @@ int			sh_parse(const char *src, t_ckbt *tree, const char *basepath)
 	if (sh_lex(src, tokens) != 0)
 		return (-1);
 	return (sh_build_tree(tokens, tree) ? -1 : 0);
-	basepath = NULL;
 }

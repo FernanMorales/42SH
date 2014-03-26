@@ -58,7 +58,6 @@ void		sh_outfile_append(t_ckl *tokens, t_ckl_item *end,
 				const t_cks boundary, const char *base);
 void		sh_replace_redirections_out(t_ckl *t, t_ckl_item *start,
 				t_ckl_item *end, const char *base);
-int			sh_parse(const char *src, t_ckbt *tree, const char *basepath);
 
 int			sh_parse_cmd_line(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root);
 int			sh_parse_seq_cmd(t_ckl *tokens, t_ckbt *tree, t_ckbt_node **root);

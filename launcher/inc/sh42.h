@@ -26,12 +26,22 @@
 # include "ckstd.h"
 # include "sh_parser.h"
 # include "ckf.h"
+# include <sys/ioctl.h>
+# include <termios.h>
+# include <term.h>
+
+# define SH_COMMAND_BUF_SIZE (32768)
 
 typedef struct				s_sh_env
 {
-	t_cks					base;
 	int						last_ret;
+	struct termios			term_orig;
+	struct termios			term_new;
 	int						tty_fd;
+	t_ckl					*char_list;
+	t_ckl					*history;
+	int						cursor;
+	char					*buf;
 }							t_sh_env;
 
 typedef struct				s_sh_process

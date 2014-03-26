@@ -113,7 +113,8 @@ LIB = -L libcks/bin -l cks \
 	  -L libckl/bin -l ckl \
 	  -L libckbt/bin -l ckbt \
 	  -L libckstd/bin -l ckstd \
-	  -L libckf/bin -l ckf
+	  -L libckf/bin -l ckf \
+	  -L /usr/lib -l termcap
 INC = -I libcks -I libckl -I libckbt \
 	  -I libckstd -I libckf -I . -I inc
 CC = cc -g -Wall -Wextra -Werror
