@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/23 15:21:04 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:21:05 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 14:51:55 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,13 @@ void	st_dup(pid_t pid, int fd_next[2], t_sh_command *c)
 
 void	st_exec(t_ckl *commands, int *last_pid, t_sh_env *env)
 {
-	int				fd_next[2] = { 0, 1 };
 	t_ckl_item		*item;
 	t_sh_command	*c;
 	pid_t			pid;
+	int				fd_next[2];
 
+	fd_next[0] = 0;
+	fd_next[1] = 1;
 	item = commands->last;
 	while (item)
 	{

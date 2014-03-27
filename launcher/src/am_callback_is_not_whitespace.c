@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/23 15:24:28 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:24:29 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 14:36:00 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ int		am_callback_is_not_whitespace(t_am *am)
 		return (1);
 	c = am->source[0];
 	return (c != ' ' && c != '\t' && c != '\n' && c != '\v' && c != '\f'
-		&& c != '\r');
+	&& c != '\r');
 }

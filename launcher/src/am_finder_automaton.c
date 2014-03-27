@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/23 15:24:02 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:24:03 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 14:47:34 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,11 @@ void	st_join_tokens(t_am *am, t_am *nam, t_am_token *joined_token)
 		joined_token->value_computed = cks_append_len(
 			joined_token->value_computed,
 			curr_token->value_computed,
-			cks_len(curr_token->value_computed)
-		);
+			cks_len(curr_token->value_computed));
 		joined_token->value_orig = cks_append_len(
 			joined_token->value_orig,
 			curr_token->value_orig,
-			cks_len(curr_token->value_orig)
-		);
+			cks_len(curr_token->value_orig));
 		item = item->next;
 	}
 	ckl_free_items(nam->tokens, am_free_token_content);

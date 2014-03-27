@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sh_builtin_cd.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ckleines <ckleines@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/03/27 14:38:38 by ckleines          #+#    #+#             */
+/*   Updated: 2014/03/27 14:56:26 by ckleines         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "sh42.h"
 
-void	st_remove_double_dash(t_ckl_item **item)
+void		st_remove_double_dash(t_ckl_item **item)
 {
 	t_ckl_item		*i;
 	t_cks			arg;
@@ -15,7 +27,7 @@ void	st_remove_double_dash(t_ckl_item **item)
 	*item = i;
 }
 
-int		st_follow(t_ckl_item **item)
+int			st_follow(t_ckl_item **item)
 {
 	t_ckl_item		*i;
 	t_cks			arg;
@@ -47,6 +59,7 @@ int		st_follow(t_ckl_item **item)
 void		st_set_new_cwd(t_cks cwd, t_cks arg, int follow)
 {
 	char		*ncwd;
+
 	if (follow && arg[0] != '/')
 	{
 		cwd = cks_append(cwd, "/");
@@ -77,8 +90,9 @@ int			st_change_dir(t_cks dir, int follow)
 		dir = cks_new(ms_getenv("OLDPWD"));
 	if (dir == NULL)
 		return (1);
-	d = cwd = NULL;
-	if ((cwd = getcwd(NULL, 0)) && (d = cks_new(cwd)) && chdir(dir) != -1)
+	d = NULL;
+	if ((cwd = getcwd(NULL, 0))
+	&& (d = cks_new(cwd)) && chdir(dir) != -1)
 	{
 		ms_setenv("OLDPWD", ms_getenv("PWD"), 1);
 		st_set_new_cwd(d, dir, follow);
@@ -103,6 +117,6 @@ int			sh_builtin_cd(t_sh_env *env, t_sh_command *cmd)
 		return (1);
 	st_remove_double_dash(&item);
 	return (st_change_dir((item) ? ckl_data(t_cks, item)
-								: cks_new(ms_getenv("HOME")), follow));
+	: cks_new(ms_getenv("HOME")), follow));
 	(void)env;
 }

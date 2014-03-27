@@ -6,7 +6,7 @@
 #    By: ckleines <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/03/08 10:37:01 by ckleines          #+#    #+#              #
-#    Updated: 2014/03/23 15:21:52 by ckleines         ###   ########.fr        #
+#    Updated: 2014/03/27 14:54:30 by ckleines         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,6 @@ SRC = \
 	  src/am_reset.c \
 	  src/am_run.c \
 	  src/am_sub_free.c \
-	  src/debug_tree.c \
 	  src/is_not_meaningful.c \
 	  src/lexer_automaton_command_line_token.c \
 	  src/lexer_automaton_double_quote_string.c \

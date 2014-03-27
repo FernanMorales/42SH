@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/23 15:20:35 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:20:36 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 14:37:02 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int			sh_parse_actual_log_cmd(t_ckl *tokens, t_ckbt *tree,
 		return (sh_parse_pipe_cmd(tokens, tree, root));
 	cmd.type = -1;
 	cmd.argv = NULL;
-	*root = node = ckbt_new_node(tree, &cmd);
+	node = ckbt_new_node(tree, &cmd);
+	*root = node;
 	cmdp = &ckbt_data(t_sh_command, node);
 	error = sh_parse_actual_log_cmd(tokens, tree, &node->left, num_ops - 1);
 	if (error == 1)

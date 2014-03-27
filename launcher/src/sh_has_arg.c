@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/23 15:15:19 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:15:20 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 14:35:33 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,5 @@ int			sh_has_arg(t_ckl *tokens)
 		return (0);
 	tok = &ckl_data(t_am_token, tokens->first);
 	return (tok->type == SH_TOKEN_TYPE_STRING
-		|| tok->type == SH_TOKEN_TYPE_QUOTE_STRING);
+	|| tok->type == SH_TOKEN_TYPE_QUOTE_STRING);
 }
