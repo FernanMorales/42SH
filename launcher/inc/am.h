@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:19:03 by ckleines          #+#    #+#             */
-/*   Updated: 2014/02/28 03:50:38 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 15:23:54 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void				am_free(t_am *am);
 int					am_ok(t_am *am);
 void				am_reset(t_am *am);
 # define am_meta(...) ((t_am_meta){__VA_ARGS__})
+# define AM_META(...) ((t_am_meta){__VA_ARGS__})
 int					am_lex(t_am_maker maker, const char *source, t_ckl *tokens);
 void				am_free_token_content(void *t);
 void				am_sub_free(t_am *am);

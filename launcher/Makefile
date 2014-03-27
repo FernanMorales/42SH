@@ -6,7 +6,7 @@
 #    By: ckleines <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/03/08 10:37:01 by ckleines          #+#    #+#              #
-#    Updated: 2014/03/27 14:54:30 by ckleines         ###   ########.fr        #
+#    Updated: 2014/03/27 15:09:10 by ckleines         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,6 @@ SRC = \
 	  src/lexer_callback_string.c \
 	  src/main.c \
 	  src/parent_checker.c \
-	  src/parser.c \
 	  src/sh_build_tree.c \
 	  src/sh_concat_strings.c \
 	  src/sh_dup.c \
@@ -83,7 +82,6 @@ SRC = \
 	  src/sh_parse_pipe_cmd.c \
 	  src/sh_parse_redirection.c \
 	  src/sh_parse_seq_cmd.c \
-	  src/sh_print_tokens.c \
 	  src/sh_remove_useless_tokens.c \
 	  src/sh_remove_whitespace.c \
 	  src/sh_token_is_quoted_string.c \
@@ -109,7 +107,6 @@ SRC = \
 	  src/sh_builtin_env.c \
 	  src/sh_prompt.c \
 	  src/sh_keys.c \
-	  src/sh_read_line.c \
 	  src/sh_get_key.c \
 	  src/sh_putc.c	
 OBJ = $(SRC:.c=.o)

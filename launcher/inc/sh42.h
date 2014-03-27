@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/08 10:41:19 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/19 10:43:51 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 15:06:11 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ typedef struct				s_sh_builtin
 	t_sh_builtin_func		func;
 }							t_sh_builtin;
 
-extern t_sh_builtin		sh_builtin[];
+extern t_sh_builtin		g_sh_builtin[];
 extern char				**environ;
 extern t_sh_env			*g_sh_env;
-extern char				*sh_keys[];
+extern char				*g_sh_keys[];
 
 int				sh_init_env_get_base(const char *prog, t_cks *base);
 int				sh_init_env(t_sh_env *env, int argc, const char **argv);
