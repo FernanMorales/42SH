@@ -25,7 +25,19 @@ void		init_env(t_env *e, char **envp)
 		e->env_c[j] = ft_strdup(envp[j]);
 	e->env_c[j] = NULL;
 }
+/* work on it*/
+t_lst		clear_lst(t_lst *l)
+{
+	t_elem	*tmp;
 
+	tmp = l->first;
+	while (tmp != l->last)
+	{
+		tmp = tmp->next;
+		free(tmp->prev);
+	}
+}
+/*  */
 int			press_key(t_lst_histo *histo, t_lst *l, char *buf)
 {
 	char							*cur_key;
@@ -38,6 +50,7 @@ int			press_key(t_lst_histo *histo, t_lst *l, char *buf)
 		if (ft_memcmp(buf, K_RETURN, 8) == 0)
 		{
 			save_in_string(l, histo);
+			l = clear_lst(l);
 			return (2);
 		}
 		else if (ft_memcmp(buf, cur_key, 8) == 0)
@@ -63,23 +76,26 @@ void		insert_char_to_list(t_lst *l, char *buf)
 	print_lst(l);
 }
 
-void	commande(t_lst_histo *histo)
+char	*buffer(void)
 {
-	char	buf[8];
-	int		ret;
-	int		i;
-	t_lst	*l;
+	char	*buf;
+
+	buf = (char *)malloc(sizeof(char) * 8);
+	ft_bzero(buf, 8);
+	return (buf);
+}
+
+void			commande(t_lst *l, t_lst_histo *histo)
+{
+	char		*buf;
+	int			ret;
+	int			i;
 	extern t_env	g_e;
 
-	l = init_list();
+	buf = buffer();
 	print_lst(l);
-	/*if (histo->first != NULL)
-	{
-		print_lst(histo->first->his);
-	}*/
 	while ((ret = read(0, buf, 8)) != 0)
 	{
-		
 //		printf("%o %o %o %o %o %o %o %o\n", buf[0],buf[1],buf[2],buf[3],buf[4],buf[5],buf[6],buf[7]);
 		if ((i = press_key(histo, l, buf)) == 0)
 			insert_char_to_list(l, buf);
@@ -88,14 +104,7 @@ void	commande(t_lst_histo *histo)
 			add_histo(histo, l);
 			return ;
 		}
-		buf[0] = 0;
-		buf[1] = 0;
-		buf[2] = 0;
-		buf[3] = 0;
-		buf[4] = 0;
-		buf[5] = 0;
-		buf[6] = 0;
-		buf[7] = 0;
+		buf = buffer();
 	}
 	ft_print(g_e.env_c);
 }
@@ -104,10 +113,12 @@ int		main(int ac, char **av, char **envp)
 {
 	extern t_env	g_e;
 	t_lst_histo		*histo;
+	t_lst	*l;
 
 	(void)av;
 	init_env(&g_e, envp);
 	init_term(&g_e);
+	l = init_list();
 	histo = (t_lst_histo *)malloc(sizeof(t_lst_histo));
 	histo->first = NULL;
 	histo->last = NULL;
@@ -116,7 +127,7 @@ int		main(int ac, char **av, char **envp)
 	while (42)
 	{
 		print_prompt();
-		commande(histo);
+		commande(l, histo);
 	}
 	close_term(&g_e);
 	return (0);
