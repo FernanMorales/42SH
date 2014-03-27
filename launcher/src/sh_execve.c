@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/23 15:19:57 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/23 15:19:58 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 15:01:15 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int		sh_execve(t_sh_command *cmd)
 	t_cks		full_prog;
 
 	argv = sh_get_argv(cmd);
-	// fix better error messages
-	if (argv == NULL || argv[0] == NULL || (full_prog = sh_full_prog(argv[0])) == NULL)
+	if (argv == NULL || argv[0] == NULL
+	|| (full_prog = sh_full_prog(argv[0])) == NULL)
 	{
 		write(2, "42sh: command not found\n", 24);
 		exit(1);

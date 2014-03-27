@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/05 18:01:57 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/05 18:01:59 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 15:02:18 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static size_t	st_do_one(
 	return (0);
 }
 
-int		st_check(const char *src, t_ckl *stack)
+int				st_check(const char *src, t_ckl *stack)
 {
 	int		c;
 
@@ -66,9 +66,10 @@ int		st_check(const char *src, t_ckl *stack)
 	return (c);
 }
 
-int		sh_check_bracketing(const char *src)
+int				sh_check_bracketing(const char *src)
 {
-	size_t		len, i;
+	size_t		len;
+	size_t		i;
 	t_ckl		*stack;
 	int			c;
 

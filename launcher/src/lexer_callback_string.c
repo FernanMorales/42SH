@@ -6,7 +6,7 @@
 /*   By: ckleines <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/05 17:51:50 by ckleines          #+#    #+#             */
-/*   Updated: 2014/03/05 18:01:38 by ckleines         ###   ########.fr       */
+/*   Updated: 2014/03/27 15:04:49 by ckleines         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int			st_add_or_fail(t_cks orig, t_cks computed, t_am *am)
 	return (0);
 }
 
-int		lexer_callback_string(t_am *am)
+int			lexer_callback_string(t_am *am)
 {
 	size_t		i;
 	t_cks		orig;
