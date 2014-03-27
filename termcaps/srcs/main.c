@@ -23,10 +23,10 @@ void		init_env(t_env *e, char **envp)
 		return ;
 	while (++j < i)
 		e->env_c[j] = ft_strdup(envp[j]);
-	e->env_c[j] = NULL; //ft_strnew(0);
+	e->env_c[j] = NULL;
 }
 
-int			press_key(t_lst *l, char *buf)
+int			press_key(t_lst_histo *histo, t_lst *l, char *buf)
 {
 	char							*cur_key;
 	extern const t_mov_functions	g_mov_functions[];
@@ -35,9 +35,14 @@ int			press_key(t_lst *l, char *buf)
 	i = 0;
 	while ((cur_key = g_mov_functions[i].key) != NULL)
 	{
-		if (ft_memcmp(buf, cur_key, 8) == 0)
+		if (ft_memcmp(buf, K_RETURN, 8) == 0)
 		{
-			g_mov_functions[i].funct(l);
+			save_in_string(l, histo);
+			return (2);
+		}
+		else if (ft_memcmp(buf, cur_key, 8) == 0)
+		{
+			g_mov_functions[i].funct(l, histo);
 			return (1);
 		}
 		i++;
@@ -45,22 +50,9 @@ int			press_key(t_lst *l, char *buf)
 	return (0);
 }
 
-/* void		insert_char_to_list(t_lst *l, char *buf) */
-/* { */
-
-/* 	if (l->cur->size_lst == 1) */
-/* 	{ */
-/* 		insert_cur_top(l, buf); */
-/* 	} */
-/* 	else */
-/* 	{ */
-/* 		insert_cur_position(l, l->cur->cursor, buf); */
-/* 	} */
-/* 	print_lst(l->cur); */
-/* } */
 void		insert_char_to_list(t_lst *l, char *buf)
 {
-	if (l->size_lst == 1)
+	if (l->size_lst == 1 || l->cursor == l->first)
 	{
 		insert_top(l, buf[0]);
 	}
@@ -71,24 +63,31 @@ void		insert_char_to_list(t_lst *l, char *buf)
 	print_lst(l);
 }
 
-int		main(int ac, char **av, char **envp)
+void	commande(t_lst_histo *histo)
 {
 	char	buf[8];
 	int		ret;
-	extern t_env	g_e;
+	int		i;
 	t_lst	*l;
+	extern t_env	g_e;
 
-	(void)av;
 	l = init_list();
-	init_env(&g_e, envp);
-	init_term(&g_e);
-	if (ac != 1)
-		return (1);
-	print_prompt();
+	print_lst(l);
+	/*if (histo->first != NULL)
+	{
+		print_lst(histo->first->his);
+	}*/
 	while ((ret = read(0, buf, 8)) != 0)
 	{
-		if (press_key(l, buf) == 0)
+		
+//		printf("%o %o %o %o %o %o %o %o\n", buf[0],buf[1],buf[2],buf[3],buf[4],buf[5],buf[6],buf[7]);
+		if ((i = press_key(histo, l, buf)) == 0)
 			insert_char_to_list(l, buf);
+		else if (i == 2)
+		{
+			add_histo(histo, l);
+			return ;
+		}
 		buf[0] = 0;
 		buf[1] = 0;
 		buf[2] = 0;
@@ -99,6 +98,26 @@ int		main(int ac, char **av, char **envp)
 		buf[7] = 0;
 	}
 	ft_print(g_e.env_c);
+}
+
+int		main(int ac, char **av, char **envp)
+{
+	extern t_env	g_e;
+	t_lst_histo		*histo;
+
+	(void)av;
+	init_env(&g_e, envp);
+	init_term(&g_e);
+	histo = (t_lst_histo *)malloc(sizeof(t_lst_histo));
+	histo->first = NULL;
+	histo->last = NULL;
+	if (ac != 1)
+		return (1);
+	while (42)
+	{
+		print_prompt();
+		commande(histo);
+	}
 	close_term(&g_e);
 	return (0);
 }

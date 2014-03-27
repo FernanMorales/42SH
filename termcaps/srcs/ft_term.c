@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/07 10:13:35 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/04 17:20:51 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/26 19:42:25 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void		init_term(t_env *e)
 		exit (ERROR_INIT);
 	if (tcgetattr(0, &e->term) == -1)
 		exit (ERROR_INIT);
-//tputs(tgetstr("vi", NULL), 1, tputs_putchar);
-	// tputs(tgetstr("ti", NULL), 1, tputs_putchar);
+//	tputs(tgetstr("vi", NULL), 1, tputs_putchar);
+//	tputs(tgetstr("ti", NULL), 1, tputs_putchar);
 	ioctl(0, TIOCGWINSZ, &e->term_size);
 	e->term.c_lflag &= ~(ICANON | ECHO);
 	e->term.c_lflag |= ISIG;
@@ -44,8 +44,8 @@ void		init_term(t_env *e)
 
 void		close_term(t_env *e)
 {
-	// tputs(tgetstr("te", NULL), 1, tputs_putchar);
-	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
+//	tputs(tgetstr("te", NULL), 1, tputs_putchar);
+//	tputs(tgetstr("ve", NULL), 1, tputs_putchar);
 	e->term.c_lflag |= ICANON | ECHO;
 	if (close(e->fd_tty) == -1)
 		exit (ERROR_CLOSE);

@@ -6,12 +6,13 @@
 /*   By: dtortera <dtortera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 17:47:32 by dtortera          #+#    #+#             */
-/*   Updated: 2014/03/15 21:54:12 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/26 19:58:11 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <term.h>
 #include <unistd.h>
+#include <stddef.h>
 #include "ft_term.h"
 #include "libft.h"
 
@@ -25,13 +26,11 @@ int			tputs_putchar(int c)
 
 void		reset_cursor(int len)
 {
-
 	while (len > 0)
 	{
 		tputs(tgetstr("le", NULL), 1, tputs_putchar);
 		len--;
 	}
-
 }
 
 void		print_lst(t_lst *l)
@@ -45,7 +44,6 @@ void		print_lst(t_lst *l)
 	tputs(tgetstr("cd", NULL), 1, tputs_putchar);
 	while (++i < l->size_lst)
 	{
-
 		if (tmp == l->cursor)
 		{
 			tputs(tgetstr("mr", NULL), 1, tputs_putchar);
@@ -57,8 +55,8 @@ void		print_lst(t_lst *l)
 		tmp = tmp->next;
 	}
 	reset_cursor(l->size_lst);
-
 }
+
 /*
 
 void		print_lst(t_lst *l)
@@ -94,6 +92,15 @@ void		print_prompt(void)
 		ft_putstr_fd(PROMPT, g_e.fd_tty);
 }
 
+void		print_clear(size_t len)
+{
+	while (len > 0)
+	{
+		tputs(tgetstr("le", NULL), 1, tputs_putchar);
+		len--;
+	}
+	tputs(tgetstr("cd", NULL), 1, tputs_putchar);
+}
 
 void		ft_print(char **line)
 {

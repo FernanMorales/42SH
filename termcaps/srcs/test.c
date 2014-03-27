@@ -27,7 +27,7 @@ int    main(void)
     insert_top(l, 'A');
     insert_top(l, 'B');
     insert_top(l, 'C');
- insert_pos(l, l->first->next, 'D');
+    insert_pos(l, l->first->next, 'D');
     print_l(l);
     printf("\nfirst : %c | last : %c", l->first->data, l->last->data);
     return (0);

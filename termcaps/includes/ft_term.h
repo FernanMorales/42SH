@@ -6,7 +6,7 @@
 /*   By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/01 16:20:57 by pvarin            #+#    #+#             */
-/*   Updated: 2014/03/15 22:18:44 by pvarin           ###   ########.fr       */
+/*   Updated: 2014/03/26 16:30:14 by pvarin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,25 @@ enum				e_exit
 
 typedef struct		s_elem
 {
-	char				data;
-	struct s_elem		*next;
-	struct s_elem		*prev;
+	char			data;
+	struct s_elem	*next;
+	struct s_elem	*prev;
 }					t_elem;
+
+typedef struct		s_elem_histo
+{
+	struct s_lst		*his;
+	struct s_elem_histo	*next;
+	struct s_elem_histo	*prev;
+}					t_elem_histo;
+
+typedef struct		s_lst_histo
+{
+	t_elem_histo	*first;
+	t_elem_histo	*last;
+	t_elem_histo	*pos;
+	int				size_histo;
+}					t_lst_histo;
 
 typedef struct		s_lst
 {
@@ -59,7 +74,6 @@ typedef struct		s_lst
 	t_elem			*last;
 	t_elem			*cursor;
 	int				size_lst;
-	struct s_lst	**histo;
 	char			*str_return;
 }					t_lst;
 
@@ -102,6 +116,12 @@ void		del_elem(t_lst *l, t_elem *current);
 int			insert_cur_position(t_lst *l, t_elem *cur, const char *data);
 int			insert_cur_top(t_lst *l, char *data);
 */
+
+/*
+** list_histo
+*/
+void		add_histo(t_lst_histo *histo, t_lst *l);
+
 /*
 ** ft_signal
 */
@@ -115,18 +135,21 @@ void		ft_print(char **line);
 void		reset_cursor(int len);
 void		print_lst(t_lst *l);
 void		print_prompt(void);
+void		print_clear(size_t len);
 
 /*
 ** mov_functions & mov_funct_?
 */
-void	move_left(t_lst *l);
-void	move_right(t_lst *l);
-void	move_up(t_lst *l);
-void	move_down(t_lst *l);
-void	save_in_string(t_lst *l);
-void	del_one(t_lst *l);
+void	move_left(t_lst *l, t_lst_histo *histo);
+void	move_right(t_lst *l, t_lst_histo *histo);
+void	move_up(t_lst *l, t_lst_histo *histo);
+void	move_down(t_lst *l, t_lst_histo *histo);
+void	save_in_string(t_lst *l, t_lst_histo *histo);
+void	del_one(t_lst *l, t_lst_histo *histo);
+//more
+t_elem_histo		*new_his(t_lst *l);
 
-typedef void	(*t_funcptr_mov)(t_lst *l);
+typedef void	(*t_funcptr_mov)(t_lst *l, t_lst_histo *histo);
 typedef struct	s_mov_functions
 {
 	char			*key;

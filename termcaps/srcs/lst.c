@@ -62,8 +62,6 @@ void		insert_pos(t_lst *l, t_elem *pos, char data)
 	new->prev = tmp->prev;
 	new->prev->next = new;
 	new->next->prev = new;
-	// tmp->prev->next = new;
-	// tmp->prev = new;
 	l->cursor = new->next;
 	l->size_lst++;
 }

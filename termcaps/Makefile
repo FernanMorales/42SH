@@ -6,7 +6,7 @@
 #    By: pvarin <pvarin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/22 18:34:11 by pvarin            #+#    #+#              #
-#    Updated: 2014/03/15 20:39:01 by pvarin           ###   ########.fr        #
+#    Updated: 2014/03/19 14:22:33 by pvarin           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -15,7 +15,7 @@ NAME = termcaps
 CFLAGS = -Werror -g
 ALL_CFLAGS = -Wall -Wextra $(CFLAGS)
 
-FILES = main ft_term print ft_signal lst
+FILES = main ft_term print ft_signal lst list_histo
 FILES += mov_functions mov_funct_1
 
 SRC = $(addprefix srcs/, $(addsuffix .c, $(FILES)))
